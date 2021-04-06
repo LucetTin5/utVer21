@@ -1,0 +1,16 @@
+{
+  "name": "ut21",
+  "version": "1.0.0",
+  "description": "ut-clone using NodeJS, Express, Mongo and ES6",
+  "repository": "https://github.com/LucetTin5/utVer21.git",
+  "author": "LucetTin5 <lucettin5@gmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.17.1"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.13.14",
+    "@babel/preset-env": "^7.13.12",
+    "nodemon": "^2.0.7"
+  }
+}

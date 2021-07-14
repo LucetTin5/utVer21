@@ -5,12 +5,22 @@
   "repository": "https://github.com/LucetTin5/utVer21.git",
   "author": "LucetTin5 <lucettin5@gmail.com>",
   "license": "MIT",
+  "scripts": {
+    "sv": "nodemon --exec babel-node src/server.js --delay 2"
+  },
   "dependencies": {
-    "express": "^4.17.1"
+    "express": "^4.17.1",
+    "morgan": "^1.10.0"
   },
   "devDependencies": {
     "@babel/core": "^7.13.14",
+    "@babel/node": "^7.14.2",
     "@babel/preset-env": "^7.13.12",
+    "dotenv": "^10.0.0",
     "nodemon": "^2.0.7"
-  }
+  },
+  "bugs": {
+    "url": "https://github.com/LucetTin5/ut21/issues"
+  },
+  "homepage": "https://github.com/LucetTin5/ut21#readme"
 }

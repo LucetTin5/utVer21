@@ -2,7 +2,13 @@
 node_modules
 
 # yarn
-
+yarn.lock
 
 # log
 *.log
+
+# env
+.env
+
+# settings
+.prettierrc

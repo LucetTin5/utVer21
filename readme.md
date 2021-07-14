@@ -12,13 +12,16 @@
 
 2. Users Routers
 
-   /users  
+   /users
+   /users/logout
+   /users/:id :: users' profile
    /users/edit  
    /users/delete
 
 3. Video Routers
 
    /videos -> /videos/:id  
+   /videos/upload
    /videos/:id/edit  
    /videos/:id/delete  
    /videos/:id/comments  

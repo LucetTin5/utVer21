@@ -1,15 +1,16 @@
 'use strict';
 // express
 import express from 'express';
-import { trending } from '../controllers/videoControllers';
+import { join, login } from '../controllers/userControllers';
+import { search, trending } from '../controllers/videoControllers';
 
 const globalRouter = express.Router();
 
 const handleHome = (req, res) => res.send('Home');
 
 globalRouter.get('/', trending);
-// globalRouter.get('/join');
-// globalRouter.get('/login');
-// globalRouter.get('/search');
+globalRouter.get('/join', join);
+globalRouter.get('/login', login);
+globalRouter.get('/search', search);
 
 export default globalRouter;

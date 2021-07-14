@@ -8,11 +8,13 @@ import {
   remove,
   comments,
   editComment,
+  upload,
 } from '../controllers/videoControllers';
 
 const videoRouter = express.Router();
 
 videoRouter.get('/:id', watch);
+videoRouter.get('/upload', upload);
 videoRouter.get('/:id/edit', edit);
 videoRouter.get('/:id/delete', remove);
 videoRouter.get('/:id/comments', comments);

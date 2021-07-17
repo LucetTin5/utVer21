@@ -4,7 +4,8 @@ import express from 'express';
 
 import {
   watch,
-  edit,
+  getEdit,
+  postEdit,
   remove,
   comments,
   editComment,
@@ -13,11 +14,13 @@ import {
 
 const videoRouter = express.Router();
 
-videoRouter.get('/:id', watch);
+// using RegEx to get params.id
+
 videoRouter.get('/upload', upload);
-videoRouter.get('/:id/edit', edit);
-videoRouter.get('/:id/delete', remove);
-videoRouter.get('/:id/comments', comments);
-videoRouter.get('/:id/comments/:id/edit', editComment);
+videoRouter.get('/:id(\\d+)', watch);
+videoRouter.route('/:id(\\d+)/edit').get(getEdit).post(postEdit);
+// videoRouter.get('/:id(\\d+)/delete', remove);
+// videoRouter.get('/:id(\\d+)/comments', comments);
+// videoRouter.get('/:id(\\d+)/comments/:id/edit', editComment);
 
 export default videoRouter;

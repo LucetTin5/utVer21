@@ -31,6 +31,10 @@
 
 `using "pug"`
 
+- add pug
+- views setting (cwd + src/views)
+- compress repeats
+
 ## Database
 
 `using "mongoDB" and "mongoose"`

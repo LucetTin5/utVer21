@@ -19,15 +19,11 @@ const PORT = process.env.PORT || 8187;
 const app = express();
 const logger = morgan('dev');
 
-const favBlock = (req, res, next) => {
-  if (req.url === 'favicon.ico') {
-    return next();
-  }
-  next();
-};
-
-app.use(favBlock);
 app.use(logger);
+app.set('view engine', 'pug');
+app.set('views', process.cwd() + '/src/views');
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
 app.use('/', globalRouter);
 app.use('/user', userRouter);
 app.use('/videos', videoRouter);

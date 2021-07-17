@@ -1,0 +1,7 @@
+extends layout
+
+block content
+  h3 Change Title of Video ##{video.id}
+  form(method='POST')
+    input(type='text', name='title', placeholder=video.title, required=true)
+    input(type='submit', value='send')

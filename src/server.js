@@ -1,4 +1,7 @@
 'use strict';
+// database
+import './db';
+
 // express
 import express from 'express';
 

@@ -1,6 +1,7 @@
 'use strict';
 // database
 import './db';
+import './models/Video';
 
 // express
 import express from 'express';

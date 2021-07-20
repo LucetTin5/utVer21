@@ -39,6 +39,12 @@
 
 `using "mongoDB" and "mongoose"`
 
+mongoose - mongoDB의 JS controller
+
+CRUD - Create, Read, Update, Delete
+
+Schema - Model -> link to server/DB
+
 ## Make Controllers
 
 `with DB, save, call, Promise object etc.`

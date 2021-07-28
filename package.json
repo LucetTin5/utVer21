@@ -6,7 +6,7 @@
   "author": "LucetTin5 <lucettin5@gmail.com>",
   "license": "MIT",
   "scripts": {
-    "sv": "nodemon --exec babel-node src/server.js --delay 2"
+    "sv": "nodemon --exec babel-node src/init.js --delay 2"
   },
   "dependencies": {
     "express": "^4.17.1",

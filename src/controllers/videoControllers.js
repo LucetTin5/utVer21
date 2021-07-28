@@ -1,47 +1,56 @@
-// GlobalRouter
-let videos = [
-  {
-    title: 'video 1',
-    id: 1,
-    views: 1230,
-    createdAt: '5 minutes ago',
-  },
-  {
-    title: 'video 2',
-    id: 2,
-    views: 12322,
-    createdAt: '2 minutes ago',
-  },
-  {
-    title: 'video 3',
-    id: 3,
-    views: 12,
-    createdAt: '10 seconds ago',
-  },
-];
+'use strict';
+import Video from '../models/Video';
 
-export const trending = (req, res) =>
-  res.render('home', { pageTitle: 'Home', videos });
+export const home = async (req, res) => {
+  try {
+    const videos = await Video.find({});
+    return res.render('home', { pageTitle: 'Home' });
+  } catch (err) {
+    console.log(err);
+    return res.send(`<h1>Server-error</h1><br><p>${err}</p>`);
+  }
+};
 export const search = (req, res) => res.send('Search Video');
 
 // VideoRouter
 export const watch = (req, res) => {
   const { id } = req.params;
-  const video = videos[id - 1];
-  res.render('watch', { pageTitle: `Watching ${video.title}`, video });
+  try {
+  } catch (err) {
+    console.log(err);
+  }
+  return res.render('watch', { pageTitle: `Watching` });
 };
 export const getEdit = (req, res) => {
   const { id } = req.params;
-  const video = videos[id - 1];
-  res.render('edit', { pageTitle: `Editing ${video.title}`, video });
+  res.render('edit', { pageTitle: `Editing` });
 };
 export const postEdit = (req, res) => {
   const { id } = req.params;
-  const { title } = req.body;
-  videos[id - 1].title = title;
+  // const { title } = req.body;
   res.redirect(`/videos/${id}`);
 };
-export const upload = (req, res) => res.send('Upload Video');
+export const getUpload = (req, res) =>
+  res.render('upload', { pageTitle: 'Upload Video' });
+export const postUpload = async (req, res) => {
+  const { title, description, tags } = req.body;
+  try {
+    // newVideo = new Video -> save() or Video.create()
+    await Video.create({
+      title,
+      description,
+      createdAt: Date.now(),
+      tags: tags.split(',').map((tag) => `#${tag}`),
+      meta: {
+        views: 0,
+        rating: 0,
+      },
+    });
+  } catch (err) {
+    console.log(err);
+    return res.redirect('/');
+  }
+};
 export const remove = (req, res) => res.send('Remove Video');
 export const comments = (req, res) => res.send('Comments');
 export const editComment = (req, res) => res.send('Edut Comment');

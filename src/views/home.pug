@@ -1,9 +1,12 @@
-extends layout
+extends layout/layout
 include mixins/video
+
 block content
   h3 Trending videos
-
-  each video in videos
-    +video(video)
+  if videos
+    each video in videos
+      +video(video)
+    else
+      |Sorry nothing found.
   else
     |Sorry nothing found.

@@ -9,14 +9,15 @@ import {
   remove,
   comments,
   editComment,
-  upload,
+  getUpload,
+  postUpload,
 } from '../controllers/videoControllers';
 
 const videoRouter = express.Router();
 
 // using RegEx to get params.id
 
-videoRouter.get('/upload', upload);
+videoRouter.route('/upload').get(getUpload).post(postUpload);
 videoRouter.get('/:id(\\d+)', watch);
 videoRouter.route('/:id(\\d+)/edit').get(getEdit).post(postEdit);
 // videoRouter.get('/:id(\\d+)/delete', remove);

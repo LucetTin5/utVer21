@@ -1,6 +1,7 @@
 // database
 import './db';
 import './models/Video';
+// import './models/User';
 
 // env
 import dotenv from 'dotenv';

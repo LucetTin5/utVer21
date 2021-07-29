@@ -2,8 +2,10 @@
 // express
 import express from 'express';
 
-// middlewares
+// middlewares for server
 import morgan from 'morgan';
+
+// middlewares customized
 
 // Routers
 import globalRouter from './routers/globalRouter';
@@ -18,6 +20,7 @@ app.set('view engine', 'pug');
 app.set('views', process.cwd() + '/src/views');
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
+// app.use(globalVariables());
 app.use('/', globalRouter);
 app.use('/user', userRouter);
 app.use('/videos', videoRouter);

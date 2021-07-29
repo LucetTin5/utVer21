@@ -5,6 +5,7 @@ const URL = 'mongodb://127.0.0.1:27017/ut21';
 mongoose.connect(URL, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
+  useFindAndModify: false,
 });
 
 const db = mongoose.connection;

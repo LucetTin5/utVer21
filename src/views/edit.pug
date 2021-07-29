@@ -1,7 +1,9 @@
 extends layout/layout
 
 block content
-  h3 Change Title of Video ##{video.id}
+  h3 Update Video
   form(method='POST')
-    input(type='text', name='title', placeholder=video.title, required=true)
-    input(type='submit', value='send')
+    input(type='text', name='title', placeholder=title, required=true, value=video.title)
+    input(type="text", name="description", placeholder="Video Description", minlength="30", value=video.description)
+    input(type="text", name="tags", required, placeholder="Tags, separated by comma", value=video.tags.join())
+    input(type='submit', value='Update')

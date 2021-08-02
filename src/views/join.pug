@@ -1,0 +1,23 @@
+extends layout/layout
+
+block content
+  if errMsg
+    sup=errMsg
+  form(method="POST")
+    label(for="email") Email 
+      input(type="email", name="email", required)
+    label(for="username") Username
+      input(type="text", name="username", required)
+    label(for="password") Password
+      input(type="password", name="password", required)
+    label(for="password2") Confirm Password
+      input(type="password", name="password2", required)
+    label(for="name") Name
+      input(type="text", name="name", required)
+    label(for="location") Location
+      input(type="text", name='location')
+    input(type="submit", value="Join")
+
+  div
+    span Already registered user?  
+    a(href="/login") Go Login &rarr; 

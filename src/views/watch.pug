@@ -1,7 +1,11 @@
 extends layout/layout
 
 block content
-  p=video.description
+  p #{video.description.charAt(0).toUpperCase() + video.description.slice(1)}
   small=video.createdAt
   
-  a(href=`${video.id}/edit`) Edit video &rarr;
+  ul
+    li  
+      a(href=`${video.id}/edit`) Edit video &rarr;
+    li
+      a(href=`${video.id}/delete`) Delete video &rarr; 

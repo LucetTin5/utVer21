@@ -1,8 +1,20 @@
 header
-  h1=pageTitle
+  h1 #{pageTitle.charAt(0).toUpperCase() + pageTitle.slice(1)}
   nav
     ul
       li
         a(href="/") Home
       li
         a(href="/videos/upload") Upload Video
+      li
+        a(href="/search") Search 
+      li 
+        a(href="/join") Join
+      //- if !userAuth
+      //-   li 
+      //-     a(href="/join") Join
+      //-   li
+      //-     a(href="/login") Login
+      //- else
+      //-   li 
+      //-     a(href="/logout") Log Out 

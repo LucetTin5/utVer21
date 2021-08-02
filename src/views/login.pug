@@ -1,0 +1,15 @@
+extends layout/layout
+
+block content
+  if errMsg
+    sup=errMsg
+  form(method="POST")
+    label(for="email") E-mail
+      input(type="email", name="email", required)
+    label(for="password") Password
+      input(type="password", name="password")
+    input(type="submit", value="Log In") 
+  hr
+  div
+    span Don't have an account?  
+    a(href="/join") Create one now &rarr; 

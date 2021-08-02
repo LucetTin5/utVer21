@@ -9,6 +9,7 @@
     "sv": "nodemon --exec babel-node src/init.js --delay 2"
   },
   "dependencies": {
+    "bcrypt": "^5.0.1",
     "express": "^4.17.1",
     "mongoose": "^5.13.3",
     "morgan": "^1.10.0",

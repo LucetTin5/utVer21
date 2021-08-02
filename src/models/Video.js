@@ -11,17 +11,25 @@ const videoSchema = new mongoose.Schema({
   },
 });
 
-videoSchema.pre('save', async function () {
-  this.tags = await this.tags[0]
+// Creating custum static functions for specific Schema
+videoSchema.static('formatTags', function (tags) {
+  return tags
     .split(',')
-    .map((tag) => (tag.startsWith('#') ? tag : `#${tag}`));
+    .map((tag) => (tag.startsWith('#') ? tag.trim() : `#${tag.trim()}`));
 });
 
-videoSchema.pre('update', async function () {
-  this.tags = await this.tags[0]
-    .split(',')
-    .map((tag) => (tag.startsWith('#') ? tag : `#${tag}`));
-});
+// Schema middlewares : pre, post ...
+//
+// videoSchema.pre('save', async function () {
+//   this.title = this.title.charAt(0).toUpperCase() + this.title.slice(1);
+//   this.description =
+//     this.description.charAt(0).toUpperCase() + this.description.slice(1);
+// });
+// videoSchema.pre('update', async function () {
+//   this.tags = await this.tags[0]
+//     .split(',')
+//     .map((tag) => (tag.startsWith('#') ? tag : `#${tag}`));
+// });
 
 const Video = mongoose.model('Video', videoSchema);
 

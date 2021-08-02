@@ -8,7 +8,7 @@ import morgan from 'morgan';
 // middlewares customized
 
 // Routers
-import globalRouter from './routers/globalRouter';
+import rootRouter from './routers/rootRouter';
 import userRouter from './routers/userRouter';
 import videoRouter from './routers/videoRouter';
 
@@ -21,7 +21,7 @@ app.set('views', process.cwd() + '/src/views');
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 // app.use(globalVariables());
-app.use('/', globalRouter);
+app.use('/', rootRouter);
 app.use('/user', userRouter);
 app.use('/videos', videoRouter);
 

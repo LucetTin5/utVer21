@@ -1,16 +1,34 @@
 'use strict';
+import { response } from 'express';
 import Video from '../models/Video';
 
 export const home = async (req, res) => {
   try {
-    const videos = await Video.find({});
+    const videos = await Video.find({}).sort({ createdAt: 'desc' });
     return res.render('home', { pageTitle: 'Home', videos });
   } catch (err) {
     console.log(err);
     return res.send(`<h1>Server-error</h1><br><p>${err}</p>`);
   }
 };
-export const search = (req, res) => res.send('Search Video');
+// search에는 다양한 mongodb의 옵션을 사용하여 세부 내용을 지정할 수 있음.
+export const search = async (req, res) => {
+  try {
+    const { keyword } = req.query;
+    if (!keyword) {
+      return res.render('search', { pageTitle: 'Search' });
+    }
+    const videos = await Video.find({
+      title: {
+        $regex: new RegExp(keyword, 'i'),
+      },
+    }).sort({ createdAt: 'desc' });
+    return res.render('search', { pageTitle: `Search by ${keyword}`, videos });
+  } catch (err) {
+    console.log(err);
+    return window.history.back();
+  }
+};
 
 // VideoRouter
 export const watch = async (req, res) => {
@@ -23,7 +41,7 @@ export const watch = async (req, res) => {
     return res.render('watch', { pageTitle: video.title, video });
   } catch (err) {
     console.log(err);
-    return res.render('404', { pageTitle: 'Video not found' });
+    return res.status(404).render('404', { pageTitle: 'Video not found' });
   }
 };
 export const getEdit = async (req, res) => {
@@ -33,7 +51,7 @@ export const getEdit = async (req, res) => {
     return res.render('edit', { pageTitle: `Edit: ${video.title}`, video });
   } catch (err) {
     console.log(err);
-    return res.render('404', { pageTitle: 'Video not found' });
+    return res.status(404).render('404', { pageTitle: 'Video not found' });
   }
 };
 export const postEdit = async (req, res) => {
@@ -46,7 +64,7 @@ export const postEdit = async (req, res) => {
     await Video.findByIdAndUpdate(id, {
       title,
       description,
-      tags,
+      tags: Video.formatTags(tags),
     });
     return res.redirect('/');
   } catch (err) {
@@ -64,17 +82,26 @@ export const postUpload = async (req, res) => {
     await Video.create({
       title,
       description,
-      tags,
+      tags: Video.formatTags(tags),
     });
     return res.redirect('/');
   } catch (err) {
     console.log(err);
     return res.render('upload', {
       pageTitle: 'Upload Video',
-      errorMessage: err._message,
+      errMsg: err._message,
     });
   }
 };
-export const remove = (req, res) => res.send('Remove Video');
+export const remove = async (req, res) => {
+  try {
+    const { id } = req.params;
+    await Video.findByIdAndDelete(id);
+    return res.redirect('/');
+  } catch (err) {
+    console.log(err);
+    return window.history.back();
+  }
+};
 export const comments = (req, res) => res.send('Comments');
 export const editComment = (req, res) => res.send('Edut Comment');

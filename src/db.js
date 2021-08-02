@@ -1,6 +1,9 @@
+import dotenv from 'dotenv';
+dotenv.config();
+
 import mongoose from 'mongoose';
 
-const URL = 'mongodb://127.0.0.1:27017/ut21';
+const URL = process.env.DB_URL;
 
 mongoose.connect(URL, {
   useNewUrlParser: true,

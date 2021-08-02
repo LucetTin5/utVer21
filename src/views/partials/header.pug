@@ -8,13 +8,14 @@ header
         a(href="/videos/upload") Upload Video
       li
         a(href="/search") Search 
-      li 
-        a(href="/join") Join
-      //- if !userAuth
-      //-   li 
-      //-     a(href="/join") Join
-      //-   li
-      //-     a(href="/login") Login
-      //- else
-      //-   li 
-      //-     a(href="/logout") Log Out 
+    ul
+      if !loggedIn
+        li 
+          a(href="/join") Join
+        li
+          a(href="/login") Login
+      else
+        li 
+          a(href="/logout") Log Out
+        li
+          a(href=`/user/${loggedInUser._id}`) #{loggedInUser.username}'s Profile

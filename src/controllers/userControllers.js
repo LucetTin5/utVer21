@@ -1,7 +1,6 @@
 import User from '../models/User';
 import bcrypt from 'bcrypt';
 import fetch from 'node-fetch';
-import axios from 'axios';
 // RootRouter
 export const getJoin = (req, res) => res.render('join', { pageTitle: 'Join' });
 export const postJoin = async (req, res) => {
@@ -76,14 +75,14 @@ export const startGitHubLogin = (req, res) => {
 };
 
 export const finishGitHubLogin = async (req, res) => {
-  // auth token -> access token -> user token
+  // auth 진행 -> code를 받아옴, code를 기반으로 access token을 요청함
   const baseUrl = 'https://github.com/login/oauth/access_token';
   const config = {
     client_id: process.env.GH_CLIENT,
     client_secret: process.env.GH_SECRET,
     code: req.query.code,
   };
-  const params = new URLSearchParams(config);
+  const params = new URLSearchParams(config).toString();
   const finalUrl = `${baseUrl}?${params}`;
   const fetchRequest = await (
     await fetch(finalUrl, {
@@ -93,18 +92,53 @@ export const finishGitHubLogin = async (req, res) => {
       },
     })
   ).json();
+  // 받아온 access_token을 이용, GH api에 post 요청을 보내 허용된 정보를 받아옴
+  // API가 ~user이기 때문에 read:user에 해당하는 정보만 받아오게 되어, email 정보는 새로운 fetch를 실행해야 함
   if ('access_token' in fetchRequest) {
     const { access_token } = fetchRequest;
-    const API_URL = 'https://api.github.com/user';
-    const userRequest = await (
-      await fetch(API_URL, {
+    const API_URL = 'https://api.github.com/';
+    const userData = await (
+      await fetch(`${API_URL}user`, {
         method: 'GET',
         headers: {
           Authorization: `token ${access_token}`,
         },
       })
     ).json();
-    return res.send(userRequest);
+    const emailData = await (
+      await fetch(`${API_URL}user/emails`, {
+        method: 'GET',
+        headers: {
+          Authorization: `token ${access_token}`,
+        },
+      })
+    ).json();
+    const emailObj = emailData.find(
+      (email) => email.verified === true && email.primary === true
+    );
+    if (!emailObj) {
+      // 이메일이 존재하지 않는 경우 오류메시지 알림을 주게 될 것
+      return res.redirect('/login');
+    }
+    // 이메일이 존재한다. 로그인을 시켜주자
+    const existingUser = await User.find({ email: emailObj.email });
+    if (existingUser) {
+      req.session.loggedIn = true;
+      req.session.user = existingUser;
+      return res.redirect('/');
+    } else {
+      // DB에 존재하지 않는 새로운 유저가 github로그인을 시도한다는 뜻
+      const user = await User.create({
+        email: emailObj.email,
+        socialLogin: true,
+        username: userData.login,
+        name: userData.name ?? userData.login,
+        location: userData.location ?? '',
+      });
+      req.sesstion.loggedIn = true;
+      req.session.user = user;
+      return res.redirect('/');
+    }
   } else {
     return res.redirect('/login');
   }

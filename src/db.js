@@ -1,6 +1,3 @@
-import dotenv from 'dotenv';
-dotenv.config();
-
 import mongoose from 'mongoose';
 
 const URL = process.env.DB_URL;

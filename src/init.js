@@ -1,11 +1,10 @@
+//env  // ==> require('dotenv').config(); === import dotenv from 'dotenv'; dotenv.config();
+import 'dotenv/config';
+
 // database
 import './db';
 import './models/Video';
 import './models/User';
-
-// env
-import dotenv from 'dotenv';
-dotenv.config();
 
 // server
 import app from './server';

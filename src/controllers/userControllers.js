@@ -1,5 +1,7 @@
 import User from '../models/User';
 import bcrypt from 'bcrypt';
+import fetch from 'node-fetch';
+import axios from 'axios';
 // RootRouter
 export const getJoin = (req, res) => res.render('join', { pageTitle: 'Join' });
 export const postJoin = async (req, res) => {
@@ -61,6 +63,52 @@ export const postLogin = async (req, res) => {
   }
 };
 
+export const startGitHubLogin = (req, res) => {
+  const baseUrl = `https://github.com/login/oauth/authorize`;
+  const config = {
+    client_id: process.env.GH_CLIENT,
+    allow_signup: false,
+    scope: 'read:user user:email',
+  };
+  const params = new URLSearchParams(config).toString();
+  const finalUrl = `${baseUrl}?${params}`;
+  return res.redirect(finalUrl);
+};
+
+export const finishGitHubLogin = async (req, res) => {
+  // auth token -> access token -> user token
+  const baseUrl = 'https://github.com/login/oauth/access_token';
+  const config = {
+    client_id: process.env.GH_CLIENT,
+    client_secret: process.env.GH_SECRET,
+    code: req.query.code,
+  };
+  const params = new URLSearchParams(config);
+  const finalUrl = `${baseUrl}?${params}`;
+  const fetchRequest = await (
+    await fetch(finalUrl, {
+      method: 'post',
+      headers: {
+        Accept: 'application/json',
+      },
+    })
+  ).json();
+  if ('access_token' in fetchRequest) {
+    const { access_token } = fetchRequest;
+    const API_URL = 'https://api.github.com/user';
+    const userRequest = await (
+      await fetch(API_URL, {
+        method: 'GET',
+        headers: {
+          Authorization: `token ${access_token}`,
+        },
+      })
+    ).json();
+    return res.send(userRequest);
+  } else {
+    return res.redirect('/login');
+  }
+};
 // UserRouter
 export const profile = (req, res) => res.send('See Profile');
 export const logout = (req, res) => res.send('Logout');

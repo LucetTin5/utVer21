@@ -1,6 +1,5 @@
 'use strict';
 // express, dotenv
-import dotenv from 'dotenv';
 import express from 'express';
 
 // middlewares for server
@@ -16,8 +15,6 @@ import rootRouter from './routers/rootRouter';
 import userRouter from './routers/userRouter';
 import videoRouter from './routers/videoRouter';
 
-dotenv.config();
-
 const app = express();
 const logger = morgan('dev');
 
@@ -30,6 +27,7 @@ app.use(express.json());
 // session : 백엔드 -> 브라우저 ""id"" 부여, 매 req마다 자동으로 cookie가 함께 전송
 // resave : session에 변경사항이 없을 시에도 req마다 매번 저장하는 것(true) - false는 특정 시점에만 저장하도록 한다.
 // saveUninitialized : 내용 없는 session은 저장하지 않음. == Uninit session은 저장하지 않음 - 쿠키 사용정책을 따름 + 서버 스토리지 절약
+// connect-mongo -> MongoStore, 세션을 mongodb에 저장함
 app.use(
   session({
     secret: process.env.COOKIE_SECRET,

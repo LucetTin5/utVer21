@@ -1,0 +1,27 @@
+extends layout/layout
+
+block content
+  if errMsg
+    sup=errMsg
+  label(for='user-profile')
+  form(method='post', name='user-profile')
+    label(for='email') Email
+      input(
+        type='email',
+        name='email',
+        value=loggedInUser.email,
+        required,
+        readonly
+      )
+    label(for='username') Username
+      input(
+        type='text',
+        name='username',
+        value=loggedInUser.username,
+        required
+      )
+    label(for='name') Name
+      input(type='text', name='name', value=loggedInUser.name, required)
+    label(for='location') Location
+      input(type='text', name='location', value=loggedInUser.location)
+    input(type='submit', value='Update profile')

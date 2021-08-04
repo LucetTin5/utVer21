@@ -1,8 +1,10 @@
 'use strict';
 // express
 import express from 'express';
+import { protectorMiddleware, unknonwOnlyMiddleware } from '../middlewares';
 import {
-  edit,
+  getEdit,
+  postEdit,
   logout,
   profile,
   remove,
@@ -12,11 +14,11 @@ import {
 
 const userRouter = express.Router();
 
-userRouter.get('/edit', edit);
-userRouter.get('/delete', remove);
-userRouter.get('/logout', logout);
-userRouter.get('/github/start', startGitHubLogin);
-userRouter.get('/github/finish', finishGitHubLogin);
+userRouter.route('/edit').all(protectorMiddleware).get(getEdit).post(postEdit);
+userRouter.get('/logout', protectorMiddleware, logout);
+userRouter.get('/github/start', unknonwOnlyMiddleware, startGitHubLogin);
+userRouter.get('/github/finish', unknonwOnlyMiddleware, finishGitHubLogin);
+// userRouter.get('/delete', remove);
 // userRouter.get('/:id', profile);
 
 export default userRouter;

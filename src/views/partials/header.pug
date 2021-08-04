@@ -1,21 +1,23 @@
 header
-  h1 #{pageTitle.charAt(0).toUpperCase() + pageTitle.slice(1)}
+  h1 #{ pageTitle.charAt(0).toUpperCase() + pageTitle.slice(1) }
   nav
     ul
       li
-        a(href="/") Home
+        a(href='/') Home
       li
-        a(href="/videos/upload") Upload Video
+        a(href='/videos/upload') Upload Video
       li
-        a(href="/search") Search 
+        a(href='/search') Search
     ul
       if !loggedIn
         li 
-          a(href="/join") Join
+          a(href='/join') Join
         li
-          a(href="/login") Login
+          a(href='/login') Login
       else
-        li 
-          a(href="/logout") Log Out
         li
-          a(href=`/user/${loggedInUser._id}`) #{loggedInUser.username}'s Profile
+          a(href=`/user/${loggedInUser._id}`) #{ loggedInUser.username }'s Profile
+        li 
+          a(href='/user/edit') Edit Profile
+        li 
+          a(href='/user/logout') Log Out

@@ -1,6 +1,24 @@
 export const localsMiddlewares = (req, res, next) => {
   res.locals.siteName = 'Wetube';
   res.locals.loggedIn = Boolean(req.session.loggedIn);
-  res.locals.loggedInUser = req.session.user;
+  res.locals.loggedInUser = req.session.user ?? {};
   next();
+};
+
+export const protectorMiddleware = (req, res, next) => {
+  // 로그인된 사용자만 접근 가능하도록
+  if (req.session.loggedIn) {
+    return next();
+  } else {
+    return res.redirect('/');
+  }
+};
+
+export const unknonwOnlyMiddleware = (req, res, next) => {
+  // 로그인되지 않은 사용자만 접근할 수 있도록
+  if (!req.session.loggedIn) {
+    return next();
+  } else {
+    return res.redirect('/');
+  }
 };

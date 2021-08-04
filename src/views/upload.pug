@@ -1,10 +1,20 @@
 extends layout/layout
 
 block content
-  if errMsg 
-    span=errMsg
-  form(method="POST")
-    input(type="text", name="title", placeholder="Title", maxlength="60")
-    input(type="text", name="description", placeholder="Video Description", minlength="30")
-    input(type="text", name="tags", required, placeholder="Tags, separated by comma")
-    input(type="submit", value="Upload Video")
+  if errMsg
+    span= errMsg
+  form(method='POST')
+    input(type='text', name='title', placeholder='Title', maxlength='60')
+    input(
+      type='text',
+      name='description',
+      placeholder='Video Description',
+      minlength='30'
+    )
+    input(
+      type='text',
+      name='tags',
+      required,
+      placeholder='Tags, separated by comma'
+    )
+    input(type='submit', value='Upload Video')

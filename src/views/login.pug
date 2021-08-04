@@ -2,16 +2,16 @@ extends layout/layout
 
 block content
   if errMsg
-    sup=errMsg
-  form(method="POST")
-    label(for="email") E-mail
-      input(type="email", name="email", required)
-    label(for="password") Password
-      input(type="password", name="password")
-    input(type="submit", value="Log In") 
+    sup= errMsg
+  form(method='POST')
+    label(for='email') E-mail
+      input(type='email', name='email', required)
+    label(for='password') Password
+      input(type='password', name='password')
+    input(type='submit', value='Log In') 
     hr
-    a(href=`/user/github/start`) Continue with GitHub &rarr;
+    a(href='/user/github/start') Continue with GitHub &rarr;
   hr
   div
-    span Don't have an account?  
-    a(href="/join") Create one now &rarr; 
+    span Don't have an account?
+    a(href='/join') Create one now &rarr;

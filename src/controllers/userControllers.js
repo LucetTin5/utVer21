@@ -2,20 +2,17 @@ import User from '../models/User';
 import bcrypt from 'bcrypt';
 import fetch from 'node-fetch';
 // RootRouter
-export const getJoin = (req, res) => res.render('join', { pageTitle: 'Join' });
+export const getJoin = (req, res) =>
+  res.render('./users/join', { pageTitle: 'Join' });
 export const postJoin = async (req, res) => {
+  const { email, username, password, password2, name, location } = req.body;
   try {
-    const { email, username, password, password2, name, location } = req.body;
-    const pageTitle = 'Join';
-    let errMsg;
     if (password !== password2) {
-      errMsg = 'Password confirmation does not match.';
-      return res.status(400).render('join', { pageTitle, errMsg });
+      throw new Error('Password confirmation does not match.');
     }
     const chkUnique = await User.exists({ $or: [{ username }, { email }] });
     if (chkUnique) {
-      errMsg = '이미 존재하는 Email/Username입니다.';
-      return res.status(400).render('join', { pageTitle, errMsg });
+      throw new Error('This email/username is already taken.');
     }
     await User.create({
       email,
@@ -27,13 +24,14 @@ export const postJoin = async (req, res) => {
     return res.redirect('/');
   } catch (err) {
     console.log(err);
-    return res
-      .status(400)
-      .render('join', { pageTitle: 'Join', errMsg: err._message });
+    return res.status(400).render('./users/join', {
+      pageTitle: 'Join',
+      errMsg: err.message || err._message,
+    });
   }
 };
 export const getLogin = (req, res) => {
-  return res.render('login', { pageTitle: 'Log In' });
+  return res.render('./users/login', { pageTitle: 'Log In' });
 };
 export const postLogin = async (req, res) => {
   const { email, password } = req.body;
@@ -41,24 +39,21 @@ export const postLogin = async (req, res) => {
   try {
     // email, pw로 로그인을 하는 상황이기 때문에, socialOnly가 false인 경우만 불러온다.
     const user = await User.findOne({ email, socialOnly: false });
-    let errMsg;
     if (!user) {
-      errMsg = `${email} - This email is not registerd.`;
-      return res.status(400).render('login', { pageTitle, errMsg });
+      throw new Error(`${email} - This email is not registerd.`);
     }
     const check = await bcrypt.compare(password, user.password);
     if (!check) {
-      errMsg = 'Wrong password';
-      return res.status(400).render('login', { pageTitle, errMsg });
+      throw new Error('Wrong password');
     }
     req.session.loggedIn = true;
     req.session.user = user;
     return res.redirect('/');
   } catch (err) {
     console.log(err);
-    return res.status(400).render('login', {
+    return res.status(400).render('./users/login', {
       pageTitle,
-      errorMsg: err._message,
+      errMsg: err.message || err._message,
     });
   }
 };
@@ -77,15 +72,15 @@ export const startGitHubLogin = (req, res) => {
 
 export const finishGitHubLogin = async (req, res) => {
   // auth 진행 -> code를 받아옴, code를 기반으로 access token을 요청함
+  const baseUrl = 'https://github.com/login/oauth/access_token';
+  const config = {
+    client_id: process.env.GH_CLIENT,
+    client_secret: process.env.GH_SECRET,
+    code: req.query.code,
+  };
+  const params = new URLSearchParams(config).toString();
+  const finalUrl = `${baseUrl}?${params}`;
   try {
-    const baseUrl = 'https://github.com/login/oauth/access_token';
-    const config = {
-      client_id: process.env.GH_CLIENT,
-      client_secret: process.env.GH_SECRET,
-      code: req.query.code,
-    };
-    const params = new URLSearchParams(config).toString();
-    const finalUrl = `${baseUrl}?${params}`;
     const fetchRequest = await (
       await fetch(finalUrl, {
         method: 'post',
@@ -120,7 +115,7 @@ export const finishGitHubLogin = async (req, res) => {
       );
       if (!emailObj) {
         // 이메일이 존재하지 않는 경우 오류메시지 알림을 주게 될 것
-        return res.redirect('/login');
+        return res.status(400).redirect('/login');
       }
       // 이메일이 존재한다. 로그인을 시켜주자
       // 이때 DB에 존재하는 유저라면 로그인상태 설정 및 바로 연결 - socialOnly는 false에서 변경하지 않는다.
@@ -156,7 +151,7 @@ export const logout = (req, res) => {
 };
 
 export const getEdit = (req, res) => {
-  return res.render('edit-profile', { pageTitle: 'Edit Profile' });
+  return res.render('./users/edit-profile', { pageTitle: 'Edit Profile' });
 };
 export const postEdit = async (req, res) => {
   try {
@@ -166,21 +161,85 @@ export const postEdit = async (req, res) => {
       },
       body: { email, username, name, location },
     } = req;
-    // 변화 체크 -> 중복 체크
-    let 
-
-    const updatedUser = await User.findByIdAndUpdate(_id, toChange, {
-      new: true,
-    });
+    // email, username change?
+    let diffs = [];
+    if (email !== currentEmail) {
+      diffs.push({ email });
+    }
+    if (username !== currentUsername) {
+      diffs.push({ username });
+    }
+    if (diffs.length > 0) {
+      const existingUser = await User.findOne({ $or: diffs });
+      // username, email이 중복인 유저가 존재한다면
+      if (existingUser && existingUser._id.toString() !== _id) {
+        // 그 유저가 존재하고, 그 유저의 id값과 현재 로그인된 유저의 id값이 동일하지 않다면 -> 다른 유저의 것과 동일한 유저네임,이메일을 등록하고자 한다면
+        throw new Error('This email/username is already taken.');
+      }
+    }
+    const updatedUser = await User.findByIdAndUpdate(
+      _id,
+      { email, username, name, location },
+      {
+        new: true,
+      }
+    );
     req.session.user = updatedUser;
     // findByUpdatd "Options" {new:true} => return new Obj
     // req.session.user = { ...req.session.user, email, username, name, location };
     return res.redirect('/');
   } catch (err) {
     console.log(err);
-    return res
-      .status(400)
-      .render('edit-profile', { pageTitle: 'Edit Profile' });
+    return res.status(400).render('/uesrs/edit-profile', {
+      pageTitle: 'Edit Profile',
+      errMsg: err.message || err._message,
+    });
+  }
+};
+
+export const getChangePassword = (req, res) => {
+  const {
+    session: {
+      user: { socialOnly },
+    },
+  } = req;
+  // socialOnly가 false인 경우만 비밀번호가 존재하기에
+  if (!socialOnly) {
+    return res.render('./users/change-password', {
+      pageTitle: 'Change Password',
+    });
+  }
+  return res.status(400).redirect('/user/edit');
+};
+export const postChangePassword = async (req, res) => {
+  const {
+    session: {
+      user: { _id },
+    },
+    body: { current, password, password2 },
+  } = req;
+  try {
+    // 입력된 새 비밀번호 두 칸이 동일한지 체크 => 가장 빠르다.
+    if (password !== password2) {
+      throw new Error('Password confirmation does not match.');
+    }
+    const user = await User.findById(_id);
+    // 기존 비밀번호와 입력된 기존 비밀번호가 일치하는지 체크
+    const chkCurrent = await bcrypt.compare(current, user.password);
+    if (!chkCurrent) {
+      throw new Error('Wrong current password ');
+    }
+    user.password = password;
+    await user.save();
+    // user의 비밀번호가 변경되면 로그아웃시킴 -> session도 사라짐
+    // 따라서 session을 따로 업데이트할 필요가 없음.
+    return res.redirect('/user/logout');
+  } catch (err) {
+    console.log(err);
+    return res.status(400).render('./users/change-password', {
+      pageTitle: 'Change Password',
+      errMsg: err.message || err._message,
+    });
   }
 };
 // UserRouter

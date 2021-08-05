@@ -1,11 +1,10 @@
 'use strict';
-import { response } from 'express';
 import Video from '../models/Video';
 
 export const home = async (req, res) => {
   try {
     const videos = await Video.find({}).sort({ createdAt: 'desc' });
-    return res.render('home', { pageTitle: 'Home', videos });
+    return res.render('./videos/home', { pageTitle: 'Home', videos });
   } catch (err) {
     console.log(err);
     return res.send(`<h1>Server-error</h1><br><p>${err}</p>`);
@@ -16,14 +15,17 @@ export const search = async (req, res) => {
   try {
     const { keyword } = req.query;
     if (!keyword) {
-      return res.render('search', { pageTitle: 'Search' });
+      return res.render('./videos/search', { pageTitle: 'Search' });
     }
     const videos = await Video.find({
       title: {
         $regex: new RegExp(keyword, 'i'),
       },
     }).sort({ createdAt: 'desc' });
-    return res.render('search', { pageTitle: `Search by ${keyword}`, videos });
+    return res.render('./videos/search', {
+      pageTitle: `Search by ${keyword}`,
+      videos,
+    });
   } catch (err) {
     console.log(err);
     return window.history.back();
@@ -38,7 +40,7 @@ export const watch = async (req, res) => {
     if (!video) {
       throw new Error('Video not found');
     }
-    return res.render('watch', { pageTitle: video.title, video });
+    return res.render('./videos/watch', { pageTitle: video.title, video });
   } catch (err) {
     console.log(err);
     return res.status(404).render('404', { pageTitle: 'Video not found' });
@@ -48,7 +50,10 @@ export const getEdit = async (req, res) => {
   const { id } = req.params;
   try {
     const video = await Video.findById(id);
-    return res.render('edit', { pageTitle: `Edit: ${video.title}`, video });
+    return res.render('./videos/edit', {
+      pageTitle: `Edit: ${video.title}`,
+      video,
+    });
   } catch (err) {
     console.log(err);
     return res.status(404).render('404', { pageTitle: 'Video not found' });
@@ -69,12 +74,12 @@ export const postEdit = async (req, res) => {
     return res.redirect('/');
   } catch (err) {
     console.log(err);
-    return res.redirect(`/videos/${id}/edit`);
+    return res.redirect(`./videos/${id}/edit`);
   }
 };
 
 export const getUpload = (req, res) =>
-  res.render('upload', { pageTitle: 'Upload Video' });
+  res.render('./videos/upload', { pageTitle: 'Upload Video' });
 
 export const postUpload = async (req, res) => {
   const { title, description, tags } = req.body;
@@ -87,7 +92,7 @@ export const postUpload = async (req, res) => {
     return res.redirect('/');
   } catch (err) {
     console.log(err);
-    return res.render('upload', {
+    return res.render('./videos/upload', {
       pageTitle: 'Upload Video',
       errMsg: err._message,
     });

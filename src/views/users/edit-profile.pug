@@ -1,4 +1,4 @@
-extends layout/layout
+extends ../layout/layout
 
 block content
   if errMsg
@@ -25,3 +25,6 @@ block content
     label(for='location') Location
       input(type='text', name='location', value=loggedInUser.location)
     input(type='submit', value='Update profile')
+    hr
+    if !loggedInUser.socialOnly 
+      a(href="change-password") Change Password &rarr;

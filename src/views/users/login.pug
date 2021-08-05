@@ -1,8 +1,9 @@
-extends layout/layout
+extends ../layout/layout
+
 
 block content
   if errMsg
-    sup= errMsg
+    sup=errMsg
   form(method='POST')
     label(for='email') E-mail
       input(type='email', name='email', required)

@@ -39,6 +39,8 @@ app.use(
 // locals에 정보를 저장하는 미들웨어는 session보다 아래에 위치해야 locals가 session에 접근 가능하다.
 app.use(localsMiddlewares);
 
+app.use('/uploads', express.static('uploads'));
+
 app.use('/', rootRouter);
 app.use('/user', userRouter);
 app.use('/videos', videoRouter);

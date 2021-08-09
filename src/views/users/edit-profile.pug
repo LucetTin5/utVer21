@@ -4,11 +4,15 @@ block content
   if errMsg
     sup=errMsg
   label(for='user-profile')
-  form(method='post', name='user-profile')
+  form(method='post', name='user-profile', enctype='multipart/form-data')
+    img(src=`/${loggedInUser.avatarUrl}`, alt=loggedInUser.username, width='100px', height='100px')
+    label(for='avatar') Avatar
+      input(type="file", name="avatar", id='avatar', accept='image/png, image/jpeg, image/jpg') 
     label(for='email') Email
       input(
         type='email',
         name='email',
+        id='email',
         value=loggedInUser.email,
         required,
         readonly
@@ -17,13 +21,14 @@ block content
       input(
         type='text',
         name='username',
+        id='username',
         value=loggedInUser.username,
         required
       )
     label(for='name') Name
-      input(type='text', name='name', value=loggedInUser.name, required)
+      input(type='text', name='name', id='name', value=loggedInUser.name, required)
     label(for='location') Location
-      input(type='text', name='location', value=loggedInUser.location)
+      input(type='text', name='location',id='location', value=loggedInUser.location)
     input(type='submit', value='Update profile')
     hr
     if !loggedInUser.socialOnly 

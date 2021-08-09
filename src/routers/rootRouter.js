@@ -8,7 +8,7 @@ import {
   postLogin,
 } from '../controllers/userControllers';
 import { home, search } from '../controllers/videoControllers';
-import { unknonwOnlyMiddleware } from '../middlewares';
+import { unknonwOnlyMiddleware, uploadAvatar } from '../middlewares';
 
 const rootRouter = express.Router();
 
@@ -17,7 +17,7 @@ rootRouter
   .route('/join')
   .all(unknonwOnlyMiddleware)
   .get(getJoin)
-  .post(postJoin);
+  .post(uploadAvatar.single('avatar'), postJoin);
 rootRouter
   .route('/login')
   .all(unknonwOnlyMiddleware)

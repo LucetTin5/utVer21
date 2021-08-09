@@ -1,0 +1,15 @@
+extends ../layout/layout
+include ../mixins/video
+
+
+block content
+  h1=user.name
+  img(src='/'+user.avatarUrl, alt=`${user.name}'s Avatar`, width='300px', height='auto')
+  br
+  a(href="/user/edit") Edit Profile &rarr;
+  br
+  br
+  if user.videos
+    each video in user.videos
+      +video(video)
+

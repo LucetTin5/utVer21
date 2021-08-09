@@ -1,3 +1,5 @@
+import multer from 'multer';
+
 export const localsMiddlewares = (req, res, next) => {
   res.locals.siteName = 'Wetube';
   res.locals.loggedIn = Boolean(req.session.loggedIn);
@@ -22,3 +24,16 @@ export const unknonwOnlyMiddleware = (req, res, next) => {
     return res.redirect('/');
   }
 };
+
+export const uploadAvatar = multer({
+  dest: 'uploads/avatar/',
+  limits: {
+    fileSize: 5 * 1e6,
+  },
+});
+export const uploadVideo = multer({
+  dest: 'uploads/videos/',
+  limits: {
+    fileSize: 20 * 1e6,
+  },
+});

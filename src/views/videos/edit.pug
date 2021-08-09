@@ -4,25 +4,24 @@ extends ../layout/layout
 block content
   h3 Update Video
   form(method='POST')
-    input(
-      type='text',
-      name='title',
-      placeholder=title,
-      required,
-      value=video.title
-    )
-    input(
-      type='text',
-      name='description',
-      placeholder='Video Description',
-      minlength='30',
-      value=video.description
-    )
-    input(
-      type='text',
-      name='tags',
-      required,
-      placeholder='Tags, separated by comma',
-      value=video.tags.join()
-    )
+    //- label(for='video') Video
+    //-   input(type="file", name='video', id='video', accpet='video/*') 
+    label(for="title") Title 
+      input(type='text', name='title', id='title', maxlength='60', value=video.title)
+    label(for="description") Video Description 
+      input(
+        type='text',
+        id='description',
+        name='description',
+        minlength='30',
+        value=video.description
+      )
+    label(for="tags") Tags, separted by comma 
+      input(
+        type='text',
+        id='tags',
+        name='tags',
+        required,
+        value=video.tags.join()
+      )
     input(type='submit', value='Update')

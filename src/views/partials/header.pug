@@ -16,8 +16,6 @@ header
           a(href='/login') Login
       else
         li
-          a(href=`/user/${loggedInUser._id}`) #{ loggedInUser.username }'s Profile
-        li 
-          a(href='/user/edit') Edit Profile
+          a(href=`/user/${loggedInUser._id}`) My Profile
         li 
           a(href='/user/logout') Log Out

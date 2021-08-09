@@ -1,11 +1,16 @@
 extends ../layout/layout
 
 block content
+  video(src='/' + video.fileUrl, controls)
   p #{ video.description.charAt(0).toUpperCase() + video.description.slice(1) }
+  small Uploaded By 
+    a(href=`/user/${video.owner._id}`)=video.owner.name
+  br
   small= video.createdAt
 
-  ul
-    li 
-      a(href=`${video.id}/edit`) Edit video &rarr;
-    li
-      a(href=`${video.id}/delete`) Delete video &rarr;
+  if String(video.owner._id) === String(loggedInUser._id)
+    ul
+      li 
+        a(href=`${video.id}/edit`) Edit video &rarr;
+      li
+        a(href=`${video.id}/delete`) Delete video &rarr;

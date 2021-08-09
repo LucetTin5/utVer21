@@ -1,5 +1,6 @@
 'use strict';
 import Video from '../models/Video';
+import User from '../models/User';
 
 export const home = async (req, res) => {
   try {
@@ -28,7 +29,7 @@ export const search = async (req, res) => {
     });
   } catch (err) {
     console.log(err);
-    return window.history.back();
+    return res.status(400).redirect('/');
   }
 };
 
@@ -36,7 +37,7 @@ export const search = async (req, res) => {
 export const watch = async (req, res) => {
   const { id } = req.params;
   try {
-    const video = await Video.findById(id);
+    const video = await Video.findById(id).populate('owner');
     if (!video) {
       throw new Error('Video not found');
     }
@@ -47,9 +48,18 @@ export const watch = async (req, res) => {
   }
 };
 export const getEdit = async (req, res) => {
-  const { id } = req.params;
+  const {
+    params: { id },
+    session: {
+      user: { _id },
+    },
+  } = req;
   try {
     const video = await Video.findById(id);
+    console.log(video.owner, _id);
+    if (String(video.owner) !== String(_id)) {
+      return res.status(403).redirect('/');
+    }
     return res.render('./videos/edit', {
       pageTitle: `Edit: ${video.title}`,
       video,
@@ -60,11 +70,20 @@ export const getEdit = async (req, res) => {
   }
 };
 export const postEdit = async (req, res) => {
-  const { id } = req.params;
-  const { title, description, tags } = req.body;
+  const {
+    session: {
+      user: { _id },
+    },
+    params: { id },
+    body: { title, description, tags },
+  } = req;
   try {
-    if (!(await Video.exists({ _id: id }))) {
-      throw Error;
+    const video = await Video.findById(id);
+    if (!video) {
+      return res.status(404).render('404', { pageTitle: 'Video not found' });
+    }
+    if (String(video.owner) !== String(_id)) {
+      return res.status(403).redirect('/');
     }
     await Video.findByIdAndUpdate(id, {
       title,
@@ -74,7 +93,7 @@ export const postEdit = async (req, res) => {
     return res.redirect('/');
   } catch (err) {
     console.log(err);
-    return res.redirect(`./videos/${id}/edit`);
+    return res.status(400).redirect(`/videos/${id}/edit`);
   }
 };
 
@@ -82,13 +101,25 @@ export const getUpload = (req, res) =>
   res.render('./videos/upload', { pageTitle: 'Upload Video' });
 
 export const postUpload = async (req, res) => {
-  const { title, description, tags } = req.body;
+  const {
+    session: {
+      user: { _id },
+    },
+    file: { path: fileUrl },
+    body: { title, description, tags },
+  } = req;
   try {
-    await Video.create({
+    const newVideo = await Video.create({
       title,
+      fileUrl,
       description,
       tags: Video.formatTags(tags),
+      owner: _id,
     });
+    const user = await User.findById(_id);
+    user.videos.push(newVideo._id);
+    user.save();
+    req.session.user = user;
     return res.redirect('/');
   } catch (err) {
     console.log(err);
@@ -99,9 +130,25 @@ export const postUpload = async (req, res) => {
   }
 };
 export const remove = async (req, res) => {
+  const {
+    session: {
+      user: { _id, videos },
+    },
+    params: { id },
+  } = req;
   try {
-    const { id } = req.params;
+    const video = await Video.findById(id);
+    if (String(video.owner) !== String(_id)) {
+      return res.status(403).redirect('/');
+    }
+    videos = videos.filter((videoId) => videoId !== id);
     await Video.findByIdAndDelete(id);
+    const updatedUser = await User.findByIdAndUpdate(
+      _id,
+      { videos },
+      { new: true }
+    );
+    req.session.user = updatedUser;
     return res.redirect('/');
   } catch (err) {
     console.log(err);

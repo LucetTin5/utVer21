@@ -157,9 +157,15 @@ export const postEdit = async (req, res) => {
   try {
     const {
       session: {
-        user: { _id, email: currentEmail, username: currentUsername },
+        user: {
+          _id,
+          avatarUrl,
+          email: currentEmail,
+          username: currentUsername,
+        },
       },
       body: { email, username, name, location },
+      file,
     } = req;
     // email, username change?
     let diffs = [];
@@ -179,7 +185,13 @@ export const postEdit = async (req, res) => {
     }
     const updatedUser = await User.findByIdAndUpdate(
       _id,
-      { email, username, name, location },
+      {
+        avatarUrl: file ? file.path : avatarUrl,
+        email,
+        username,
+        name,
+        location,
+      },
       {
         new: true,
       }
@@ -242,7 +254,19 @@ export const postChangePassword = async (req, res) => {
     });
   }
 };
+export const profile = async (req, res) => {
+  const { id } = req.params;
+  try {
+    const user = await User.findById(id).populate('videos');
+    if (!user) {
+      return res.status(404).render({ pageTitle: 'User not found.' });
+    }
+    return res.render('users/profile', { pageTitle: user.name, user });
+  } catch (err) {
+    console.log(err);
+    return res.status(400).redirect('/');
+  }
+};
 // UserRouter
-export const profile = (req, res) => res.send('See Profile');
 export const edit = (req, res) => res.send('Edit Profile');
 export const remove = (req, res) => res.send('Remove Profile');

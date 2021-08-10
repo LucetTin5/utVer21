@@ -1,0 +1,38 @@
+form {
+  max-width: 420px;
+  margin: 0 auto;
+  label {
+    color: #fff;
+  }
+  &:not(.search__form) {
+    padding: 30px;
+    background-color: rgba($color: $bg-light, $alpha: 0.7);
+    border-radius: 10px;
+    border: 1px solid rgba($color: #fff, $alpha: 0.1);
+  }
+}
+
+input {
+  all: unset;
+  padding: 10px 20px;
+  border-radius: 5px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  background-color: #fff;
+  margin: 3px 0;
+  font-size: 1.2em;
+  color: #444;
+  width: 90%;
+}
+
+input[type='submit'],
+.social__btn {
+  border-radius: 5px;
+  padding: 13px 20px;
+  font-weight: 600;
+  font-size: 1.3em;
+  background-color: white;
+  color: rgba($color: $bg, $alpha: 1);
+  text-align: center;
+  cursor: pointer;
+  display: block;
+}

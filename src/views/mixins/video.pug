@@ -1,9 +1,13 @@
-mixin video(info)
-  .videoBlock
-    h4
-      a(href=`/videos/${info.id}`) #{ info.title.charAt(0).toUpperCase() + info.title.slice(1) }
-    p #{ info.description.charAt(0).toUpperCase() + info.description.slice(1) }
-    small= info.createdAt
-    br
-    small= info.tags.join(" ")
-    hr
+mixin video(video)
+  a(href=`/videos/${video.id}`).video-mixin
+    .video-mixin__thumb
+    .video-mixin__data
+      span.video-mixin__title #{ video.title.charAt(0).toUpperCase() + video.title.slice(1) }
+      .video-mixin__meta
+        span #{video.owner.name} &middot;  
+        span #{video.meta.views} 회
+    //- p #{ video.description.charAt(0).toUpperCase() + video.description.slice(1) }
+    //- small= video.createdAt
+    //- br
+    //- small= video.tags.join(" ")
+    //- hr

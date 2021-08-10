@@ -4,8 +4,6 @@ extends ../layout/layout
 block content
   h3 Update Video
   form(method='POST')
-    //- label(for='video') Video
-    //-   input(type="file", name='video', id='video', accpet='video/*') 
     label(for="title") Title 
       input(type='text', name='title', id='title', maxlength='60', value=video.title)
     label(for="description") Video Description 

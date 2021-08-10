@@ -4,7 +4,8 @@ include ../mixins/video
 
 block content
   if videos
+  .video-grid
     each video in videos
       +video(video)
-  else
-    | Sorry nothing found.
+    else
+      span.empty__message No videos found.

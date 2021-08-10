@@ -1,21 +1,30 @@
 header
-  h1 #{ pageTitle.charAt(0).toUpperCase() + pageTitle.slice(1) }
+  a(href='/').header__logo
+    i.fas.fa-home
+  //- h1 #{ pageTitle.charAt(0).toUpperCase() + pageTitle.slice(1) }
   nav
     ul
       li
-        a(href='/') Home
-      li
-        a(href='/videos/upload') Upload Video
-      li
-        a(href='/search') Search
-    ul
+        a(href='/search')
+          i.fas.fa-search
       if !loggedIn
         li 
-          a(href='/join') Join
+          a(href='/join').header__btn Join
         li
-          a(href='/login') Login
+          a(href='/login').header__btn Login
       else
         li
-          a(href=`/user/${loggedInUser._id}`) My Profile
+          a(href='/videos/upload').header__btn Upload Video
+        li
+          a(href='/user/edit').header__btn Edit Profile
+        li
+          a(href=`/user/${loggedInUser._id}`)
+            if loggedInUser.avatarUrl === ""
+              span 😎
+            else
+              if loggedInUser.avatarUrl.startsWith('https://')
+                img.header__avatar(src=loggedInUser.avatarUrl)
+              else
+                img.header__avatar(src='/'+loggedInUser.avatarUrl)
         li 
-          a(href='/user/logout') Log Out
+          a(href='/user/logout').header__btn Log Out

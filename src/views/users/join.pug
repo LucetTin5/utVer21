@@ -2,10 +2,10 @@ extends ../layout/layout
 
 block content
   if errMsg
-    sup= errMsg
+    span= errMsg
   form(method='POST', enctype='multipart/form-data')
-    label(for='avatar') Avatar
-      input(type="file", name='avatar', id='avatar', accept='image/jpeg, image/jpg, image/png')
+    //- label(for='avatar') Avatar
+    //-   input(type="file", name='avatar', id='avatar', accept='image/jpeg, image/jpg, image/png')
     label(for='email') Email
       input(type='email', id='email', name='email', required)
     label(for='username') Username
@@ -19,7 +19,8 @@ block content
     label(for='location') Location
       input(type='text', id='location', name='location')
     input(type='submit', value='Join')
+    include ../partials/social-login
 
-  div
-    span Already registered user?
-    a(href='/login') Go Login &rarr;
+  div.auth-switch
+    span Already have an account?   
+    a(href='/login') Log in now &rarr;

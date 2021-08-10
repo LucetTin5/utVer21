@@ -1,0 +1,11 @@
+footer {
+  width: 100%;
+  min-height: 1.5em;
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  bottom: 0;
+  font-size: 0.8em;
+  background-color: rgba($color: $bg-dark, $alpha: 0.5);
+}

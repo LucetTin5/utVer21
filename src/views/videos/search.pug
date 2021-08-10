@@ -3,10 +3,13 @@ extends ../layout/layout
 include ../mixins/video
 
 block content
-  label Searching Title
-    form(method='GET')
-      input(type='text', name='keyword')
-      input(type='submit', value='Search now')
-  if videos
-    each video in videos
-      +video(video)
+  form(method='GET')
+    label(for='keyword') Search by Title
+    input(type='text', id='keyword' name='keyword', placeholder='Press <Enter Key> to search', required)
+  br
+  .video-grid
+    if videos
+      each video in videos
+        +video(video)
+    else
+      span.empty__message No videos found

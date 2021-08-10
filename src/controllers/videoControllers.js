@@ -47,6 +47,39 @@ export const watch = async (req, res) => {
     return res.status(404).render('404', { pageTitle: 'Video not found' });
   }
 };
+// Upload
+export const getUpload = (req, res) =>
+  res.render('./videos/upload', { pageTitle: 'Upload Video' });
+export const postUpload = async (req, res) => {
+  const {
+    session: {
+      user: { _id },
+    },
+    file: { path: fileUrl },
+    body: { title, description, tags },
+  } = req;
+  try {
+    const newVideo = await Video.create({
+      title,
+      fileUrl,
+      description,
+      tags: Video.formatTags(tags),
+      owner: _id,
+    });
+    const user = await User.findById(_id);
+    user.videos.push(newVideo._id);
+    user.save();
+    req.session.user = user;
+    return res.redirect('/');
+  } catch (err) {
+    console.log(err);
+    return res.render('./videos/upload', {
+      pageTitle: 'Upload Video',
+      errMsg: err._message,
+    });
+  }
+};
+// Edit
 export const getEdit = async (req, res) => {
   const {
     params: { id },
@@ -94,39 +127,6 @@ export const postEdit = async (req, res) => {
   } catch (err) {
     console.log(err);
     return res.status(400).redirect(`/videos/${id}/edit`);
-  }
-};
-
-export const getUpload = (req, res) =>
-  res.render('./videos/upload', { pageTitle: 'Upload Video' });
-
-export const postUpload = async (req, res) => {
-  const {
-    session: {
-      user: { _id },
-    },
-    file: { path: fileUrl },
-    body: { title, description, tags },
-  } = req;
-  try {
-    const newVideo = await Video.create({
-      title,
-      fileUrl,
-      description,
-      tags: Video.formatTags(tags),
-      owner: _id,
-    });
-    const user = await User.findById(_id);
-    user.videos.push(newVideo._id);
-    user.save();
-    req.session.user = user;
-    return res.redirect('/');
-  } catch (err) {
-    console.log(err);
-    return res.render('./videos/upload', {
-      pageTitle: 'Upload Video',
-      errMsg: err._message,
-    });
   }
 };
 export const remove = async (req, res) => {

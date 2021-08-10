@@ -129,7 +129,9 @@ export const finishGitHubLogin = async (req, res) => {
           socialOnly: true,
           username: userData.login,
           password: '',
-          name: userData.name ?? 'Unknown',
+          name:
+            userData.name ??
+            `SocialUser_${String(new Date().valueOf()).slice(0, 6)}`,
           location: userData.location ?? '',
         });
       }
@@ -257,7 +259,13 @@ export const postChangePassword = async (req, res) => {
 export const profile = async (req, res) => {
   const { id } = req.params;
   try {
-    const user = await User.findById(id).populate('videos');
+    const user = await User.findById(id).populate({
+      path: 'videos',
+      populate: {
+        path: 'owner',
+        model: 'User',
+      },
+    });
     if (!user) {
       return res.status(404).render({ pageTitle: 'User not found.' });
     }

@@ -5,10 +5,10 @@ block content
     span=errMsg
   label(for='user-profile').edit-profile__form
   form(method='post', name='user-profile', enctype='multipart/form-data')
-    if loggedInUser.avatarUrl.startsWith('https://')
-      img(src=`${loggedInUser.avatarUrl}`, alt=loggedInUser.username, width='100px', height='100px')
-    else  
-      img(src=`/${loggedInUser.avatarUrl}`, alt=loggedInUser.username, width='100px', height='100px')
+    //-  if loggedInUser.avatarUrl.startsWith('https://')
+        img(src=`${loggedInUser.avatarUrl}`, alt=loggedInUser.username).avatar
+      else  
+        img(src=`/${loggedInUser.avatarUrl}`, alt=loggedInUser.username).avatar
     label(for='avatar') Avatar
       input(type="file", name="avatar", id='avatar', accept='image/png, image/jpeg, image/jpg') 
     label(for='email') Email

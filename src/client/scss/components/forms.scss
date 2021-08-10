@@ -3,6 +3,9 @@ form {
   margin: 0 auto;
   label {
     color: #fff;
+    input {
+      margin: 5px 0;
+    }
   }
   &:not(.search__form) {
     padding: 30px;
@@ -18,8 +21,7 @@ input {
   border-radius: 5px;
   border: 1px solid rgba(255, 255, 255, 0.2);
   background-color: #fff;
-  margin: 3px 0;
-  font-size: 1.2em;
+  font-size: 1.1em;
   color: #444;
   width: 90%;
 }
@@ -29,7 +31,7 @@ input[type='submit'],
   border-radius: 5px;
   padding: 13px 20px;
   font-weight: 600;
-  font-size: 1.3em;
+  font-size: 1.2em;
   background-color: white;
   color: rgba($color: $bg, $alpha: 1);
   text-align: center;

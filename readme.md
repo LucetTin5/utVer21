@@ -4,28 +4,29 @@
 
 `"Grouping URLs"`
 
-1. Global Routers  
-   /  
-   /join  
-   /login  
-   /search -> /search?queries
+1. Global Routers
+
+   - /
+   - /join
+   - /login
+   - /search -> /search?queries
 
 2. Users Routers
 
-   /users
-   /users/logout
-   /users/:id :: users' profile
-   /users/edit  
-   /users/delete
+   - /users
+   - /users/logout
+   - /users/:id :: users' profile
+   - /users/edit
+   - /users/delete
 
 3. Video Routers
 
-   /videos -> /videos/:id  
-   /videos/upload
-   /videos/:id/edit  
-   /videos/:id/delete  
-   /videos/:id/comments  
-   /videos/:id/comments/:id/delete
+   - /videos -> /videos/:id
+   - /videos/upload
+   - /videos/:id/edit
+   - /videos/:id/delete
+   - /videos/:id/comments
+   - /videos/:id/comments/:id/delete
 
 ## Templates
 
@@ -51,7 +52,7 @@ Schema - Model -> link to server/DB
 
 ## User Auth
 
-`create Acc, Form validation, Login, Sessions, Cookie, Social Login etc.`
+`Create Account, Form Validation, Login, Sessions, Cookie, Social Login etc.`
 
 ## Profile for User, Video
 
@@ -64,3 +65,5 @@ Schema - Model -> link to server/DB
 ## Video Player & Video Recorder
 
 `HTML5, Vanilla JS video Player`
+
+Tag Video inhereits **[HTMLMediaElement](https://developer.mozilla.org/ko/docs/Web/API/HTMLMediaElement)**

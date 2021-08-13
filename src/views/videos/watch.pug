@@ -1,7 +1,25 @@
 extends ../layout/layout
 
 block content
-  video(src='/' + video.fileUrl, controls)
+  #videoContainer
+    video(src='/' + video.fileUrl)
+    #videoControls.videoControls
+      .videoControls__play
+        button.videoControls__playBtn#play
+          i.fas.fa-play#playIcon
+        .videoControls__time
+          span#time-current 00:00  
+          span /  
+          span#time-duration 00:00
+      input(type="range", name="timeline", step="1", min="0").videoControls__timeline#timeline
+      .videoControls__volume
+        input(type="range", name="volume", step="0.1", min="0", max="1")#volume
+        button.videoControls__volumeBtn#mute
+          i.fas.fa-volume-up#muteIcon
+      button#fullscreen
+        i.fas.fa-expand#fullscreenIcon
+    //-
+      button#theather
   //-
     div
       p #{ video.description.charAt(0).toUpperCase() + video.description.slice(1) }

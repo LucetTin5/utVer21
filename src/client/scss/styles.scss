@@ -9,11 +9,11 @@
 @import './components/shared';
 @import './components/social-login';
 @import './components/mixin_video';
-
+@import './components/video-player';
 // Screens
 @import './screens/search.scss';
 @import './screens/profile.scss';
-@import './screens/edit-profile.scss';
+@import './screens/edit-profile';
 
 // Defaults
 * {

@@ -123,6 +123,13 @@ const handleKeyDown = (event) => {
     video.currentTime -= 5;
   }
 };
+// Apis
+const handleEnded = () => {
+  const { id } = videoContainer.dataset;
+  fetch(`/api/videos/${id}/views`, {
+    method: 'POST',
+  });
+};
 // EventListeners
 // play
 playBtn.addEventListener('click', handleVideoPlay);
@@ -141,3 +148,5 @@ videoContainer.addEventListener('mouseleave', handleMouseLeave);
 videoContainer.addEventListener('dblclick', handleFullScreen);
 videoContainer.addEventListener('mousedown', handleVideoPlay);
 document.addEventListener('keydown', handleKeyDown);
+// apis
+video.addEventListener('ended', handleEnded);

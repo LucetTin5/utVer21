@@ -4,6 +4,7 @@ module.exports = {
   entry: {
     main: './src/client/scripts/main.js',
     videoPlayer: './src/client/scripts/videoPlayer.js',
+    recorder: './src/client/scripts/recorder.js',
   },
   mode: 'development',
   plugins: [

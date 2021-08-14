@@ -159,5 +159,19 @@ export const remove = async (req, res) => {
     return window.history.back();
   }
 };
+export const registerView = async (req, res) => {
+  const { id } = req.params;
+  try {
+    const video = await Video.findById(id);
+    video.meta.views++;
+    video.save();
+    // status Code를 보내고 종료하려면 sendStatus를 설정
+    // status code를 포함시킨 res를 전달하려면 .status().-- 를 사용
+    return res.sendStatus(200);
+  } catch (err) {
+    console.log(err);
+    return res.sendStatus(404);
+  }
+};
 export const comments = (req, res) => res.send('Comments');
 export const editComment = (req, res) => res.send('Edut Comment');

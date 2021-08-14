@@ -1,6 +1,9 @@
 extends ../layout/layout
 
 block content
+  div 
+    video#preview
+    button#startRecord Start Recording
   if errMsg
     span= errMsg
   form(method='POST', enctype='multipart/form-data')
@@ -24,3 +27,6 @@ block content
         placeholder='Tags, separated by comma'
       )
     input(type='submit', value='Upload Video')
+
+block scripts
+  script(src="/assets/scripts/recorder.js") 

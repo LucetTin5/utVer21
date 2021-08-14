@@ -62,8 +62,12 @@ Schema - Model -> link to server/DB
 
 `Convert files with Webpack, Uses SCSS for decoration not CSS`
 
+- Webpack의 Loader는 뒤에서부터 실행된다.
+
 ## Video Player & Video Recorder
 
 `HTML5, Vanilla JS video Player`
 
 Tag Video inhereits **[HTMLMediaElement](https://developer.mozilla.org/ko/docs/Web/API/HTMLMediaElement)**
+
+##

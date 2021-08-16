@@ -37,3 +37,8 @@ export const uploadVideo = multer({
     fileSize: 20 * 1e6,
   },
 });
+export const setCrossOrigin = (_, res, next) => {
+  res.header('Cross-Origin-Opener-Policy', 'same-origin');
+  res.header('Cross-Origin-Embedder-Policy', 'require-corp');
+  next();
+};

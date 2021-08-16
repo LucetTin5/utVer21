@@ -1,5 +1,5 @@
-var path = require('path');
-var MiniCSSExtractPlugin = require('mini-css-extract-plugin');
+const path = require('path');
+const MiniCSSExtractPlugin = require('mini-css-extract-plugin');
 module.exports = {
   entry: {
     main: './src/client/scripts/main.js',

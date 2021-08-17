@@ -3,7 +3,7 @@ include ../mixins/comment
 
 block content
   #videoContainer(data-id=video._id)
-    video(src='/' + video.fileUrl)
+    video(src='/' + video.fileUrl autostart='false')
     #videoControls.videoControls
       .videoControls__play
         button.videoControls__playBtn#play
@@ -25,10 +25,11 @@ block content
       form.video__comments-form#commentForm
         textarea(cols="30", rows="4", placeholder="Write new Comment...")
         button Add new comment 
-    if comments
+    if video.comments
       .comment__container
-        each comment in comments
+        each comment in video.comments
           +comment(comment)
 block scripts
-  script(src="/assets/scripts/videoPlayer.js") 
-  script(src="/assets/scripts/commentSection.js") 
+  script(src="/assets/scripts/videoPlayer.js")
+  if loggedIn 
+    script(src="/assets/scripts/commentSection.js") 

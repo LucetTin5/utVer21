@@ -1,6 +1,7 @@
 'use strict';
 import Video from '../models/Video';
 import User from '../models/User';
+import Comment from '../models/Comment';
 
 export const home = async (req, res) => {
   try {
@@ -42,7 +43,7 @@ export const search = async (req, res) => {
 export const watch = async (req, res) => {
   const { id } = req.params;
   try {
-    const video = await Video.findById(id).populate('owner');
+    const video = await Video.findById(id).populate(['owner', 'comments']);
     if (!video) {
       throw new Error('Video not found');
     }
@@ -162,6 +163,7 @@ export const remove = async (req, res) => {
     return window.history.back();
   }
 };
+// api
 export const registerView = async (req, res) => {
   const { id } = req.params;
   try {
@@ -170,6 +172,32 @@ export const registerView = async (req, res) => {
     video.save();
     // status Code를 보내고 종료하려면 sendStatus를 설정
     // status code를 포함시킨 res를 전달하려면 .status().-- 를 사용
+    return res.sendStatus(200);
+  } catch (err) {
+    console.log(err);
+    return res.sendStatus(404);
+  }
+};
+export const newComment = async (req, res) => {
+  const {
+    params: { id },
+    body: { comment },
+    session: {
+      user: { _id },
+    },
+  } = req;
+  try {
+    const newComment = await Comment.create({
+      video: id,
+      owner: _id,
+      comment,
+    });
+    const video = await Video.findById(id);
+    const user = await User.findById(_id);
+    video.comments.push(newComment._id);
+    user.comments.push(newComment._id);
+    video.save();
+    user.save();
     return res.sendStatus(200);
   } catch (err) {
     console.log(err);

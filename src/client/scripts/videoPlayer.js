@@ -71,6 +71,7 @@ const formatTime = (seconds) => {
 const handleLoadedMetaData = () => {
   time_duration.innerText = formatTime(Math.floor(video.duration));
   timeline.max = Math.floor(video.duration);
+  timeline.value = 0;
 };
 const handleTimeUpdate = () => {
   time_current.innerText = formatTime(Math.floor(video.currentTime));
@@ -176,3 +177,7 @@ document.addEventListener('click', handleFocused);
 document.addEventListener('fullscreenchange', handleFullScreen);
 // apis
 video.addEventListener('ended', handleEnded);
+
+if (video.readyState >= 4) {
+  handleLoadedMetaData();
+}

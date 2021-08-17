@@ -6,7 +6,7 @@ import express from 'express';
 import morgan from 'morgan';
 import session from 'express-session';
 import MongoStore from 'connect-mongo';
-
+import flash from 'express-flash';
 // middlewares customized
 import { localsMiddlewares } from './middlewares';
 
@@ -37,6 +37,8 @@ app.use(
     store: MongoStore.create({ mongoUrl: process.env.DB_URL }),
   })
 );
+// flash는 res.locals.messages를 생성한다.
+app.use(flash());
 // locals에 정보를 저장하는 미들웨어는 session보다 아래에 위치해야 locals가 session에 접근 가능하다.
 app.use(localsMiddlewares);
 

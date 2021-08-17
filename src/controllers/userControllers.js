@@ -8,10 +8,12 @@ export const postJoin = async (req, res) => {
   const { email, username, password, password2, name, location } = req.body;
   try {
     if (password !== password2) {
+      req.flash('error', 'Password confirmation does not match.');
       throw new Error('Password confirmation does not match.');
     }
     const chkUnique = await User.exists({ $or: [{ username }, { email }] });
     if (chkUnique) {
+      req.flash('error', 'This email/username is already exists.');
       throw new Error('This email/username is already taken.');
     }
     await User.create({
@@ -40,10 +42,12 @@ export const postLogin = async (req, res) => {
     // email, pw로 로그인을 하는 상황이기 때문에, socialOnly가 false인 경우만 불러온다.
     const user = await User.findOne({ email, socialOnly: false });
     if (!user) {
+      req.flash('error', 'This email is not registerd.');
       throw new Error(`${email} - This email is not registerd.`);
     }
     const check = await bcrypt.compare(password, user.password);
     if (!check) {
+      req.flash('error', 'Wrong password.');
       throw new Error('Wrong password');
     }
     req.session.loggedIn = true;
@@ -137,17 +141,20 @@ export const finishGitHubLogin = async (req, res) => {
       }
       req.session.loggedIn = true;
       req.session.user = user;
+      req.flash('info', `Hello, ${user.name}`);
       return res.redirect('/');
     } else {
       return res.redirect('/login');
     }
   } catch (err) {
     console.log(err);
+    req.flash('error', 'Github login failed');
     return res.status(400).redirect('/');
   }
 };
 export const logout = (req, res) => {
   // session의 정보를 파괴하는것으로 현재의 session - 로그인 유저의 정보를 제거한다.
+  req.flash('info', 'Bye Bye');
   req.session.destroy();
   return res.redirect('/');
 };
@@ -182,6 +189,7 @@ export const postEdit = async (req, res) => {
       // username, email이 중복인 유저가 존재한다면
       if (existingUser && existingUser._id.toString() !== _id) {
         // 그 유저가 존재하고, 그 유저의 id값과 현재 로그인된 유저의 id값이 동일하지 않다면 -> 다른 유저의 것과 동일한 유저네임,이메일을 등록하고자 한다면
+        req.flash('error', 'This email/username is already exists.');
         throw new Error('This email/username is already taken.');
       }
     }
@@ -235,18 +243,21 @@ export const postChangePassword = async (req, res) => {
   try {
     // 입력된 새 비밀번호 두 칸이 동일한지 체크 => 가장 빠르다.
     if (password !== password2) {
+      req.flash('error', 'Password confirmaton does not match');
       throw new Error('Password confirmation does not match.');
     }
     const user = await User.findById(_id);
     // 기존 비밀번호와 입력된 기존 비밀번호가 일치하는지 체크
     const chkCurrent = await bcrypt.compare(current, user.password);
     if (!chkCurrent) {
+      req.flash('error', 'Wrong password');
       throw new Error('Wrong current password ');
     }
     user.password = password;
     await user.save();
     // user의 비밀번호가 변경되면 로그아웃시킴 -> session도 사라짐
     // 따라서 session을 따로 업데이트할 필요가 없음.
+    req.flash('info', 'Password change successful. Login again.');
     return res.redirect('/user/logout');
   } catch (err) {
     console.log(err);

@@ -1,32 +1,35 @@
 extends ../layout/layout
 
 block content
-  div 
-    video#preview
-    button#recordBtn Start Recording
-  if errMsg
-    span= errMsg
-  form(method='POST', enctype='multipart/form-data')
-    label(for='video') Video
-      input(type="file", name='video', id='video', accpet='video/*', required) 
-    label(for="title") Title 
-      input(type='text', name='title', id='title', maxlength='60')
-    label(for="description") Video Description 
-      input(
-        type='text',
-        id='description',
-        name='description',
-        minlength='30'
-      )
-    label(for="tags") Tags, separted by comma 
-      input(
-        type='text',
-        id='tags',
-        name='tags',
-        required,
-        placeholder='Tags, separated by comma'
-      )
-    input(type='submit', value='Upload Video')
+  .upload__container
+    .upload__video
+      video#preview
+      button#recordBtn.social__btn Start Recording (4 seconds Video)
+    if errMsg
+      span= errMsg
+    form(method='POST', enctype='multipart/form-data')
+      label(for='video') Video
+        input(type="file", name='video', id='video', accpet='video/*', required) 
+      label(for='thumb') Thumbnail
+        input(type="file", name='thumb', id='thumb', accpet='image/*', required) 
+      label(for="title") Title 
+        input(type='text', name='title', id='title', maxlength='60')
+      label(for="description") Video Description 
+        input(
+          type='text',
+          id='description',
+          name='description',
+          minlength='30'
+        )
+      label(for="tags") Tags, separted by comma 
+        input(
+          type='text',
+          id='tags',
+          name='tags',
+          required,
+          placeholder='Tags, separated by comma'
+        )
+      input(type='submit', value='Upload Video')
 
 block scripts
   script(src="/assets/scripts/recorder.js" defer) 

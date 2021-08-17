@@ -3,6 +3,7 @@ import mongoose from 'mongoose';
 const videoSchema = new mongoose.Schema({
   title: { type: String, required: true, maxLength: 60 },
   fileUrl: { type: String, required: true },
+  thumbUrl: { type: String, required: true },
   description: { type: String, required: true, minLength: 30 },
   tags: [{ type: String }],
   owner: { type: mongoose.Schema.Types.ObjectId, required: true, ref: 'User' },
@@ -11,6 +12,7 @@ const videoSchema = new mongoose.Schema({
     views: { type: Number, required: true, default: 0 },
     rating: { type: Number, required: true, default: 0 },
   },
+  comments: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Comment' }],
 });
 
 // Creating custum static functions for specific Schema

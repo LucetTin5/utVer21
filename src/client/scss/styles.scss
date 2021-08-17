@@ -9,12 +9,13 @@
 @import './components/shared';
 @import './components/social-login';
 @import './components/mixin_video';
+@import './components/mixin_messages';
 @import './components/video-player';
 // Screens
 @import './screens/search.scss';
 @import './screens/profile.scss';
 @import './screens/edit-profile';
-
+@import './screens/upload';
 // Defaults
 * {
   box-sizing: border-box;

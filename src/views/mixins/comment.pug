@@ -1,0 +1,13 @@
+mixin comment(comment)
+  .comment
+    div(id=comment.owner)
+    .comment__comment
+      span=comment.comment
+    .comment__buttons
+      span=comment.meta.like
+      button.comment__buttons__likeBtn#likeBtn
+        i.far.fa-thumbs-up#likeIcon
+      span=comment.meta.dislike
+      button.comment__buttons__dislieBtn#dislikeBtn
+        i.far.fa-thumbs-down#dislikeIcon
+  

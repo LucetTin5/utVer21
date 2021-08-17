@@ -1,4 +1,5 @@
 extends ../layout/layout
+include ../mixins/comment
 
 block content
   #videoContainer(data-id=video._id)
@@ -18,19 +19,16 @@ block content
           i.fas.fa-volume-up#muteIcon
       button#fullscreen
         i.fas.fa-expand#fullscreenIcon
-    //-
-      button#theather
-  //-
-    div
-      p #{ video.description.charAt(0).toUpperCase() + video.description.slice(1) }
-      small= video.createdAt
-    div
-      small Uploaded By 
-        a(href=`/user/${video.owner._id}`)=video.owner.name
-    if String(video.owner._id) === String(loggedInUser._id)
-      a(href=`${video.id}/edit`) Edit Video &rarr;
-      br
-      a(href=`${video.id}/delete`) Delete Video &rarr;
-
+  
+  if loggedIn
+    .video__comments
+      form.video__comments-form#commentForm
+        textarea(cols="30", rows="4", placeholder="Write new Comment...")
+        button Add new comment 
+    if comments
+      .comment__container
+        each comment in comments
+          +comment(comment)
 block scripts
   script(src="/assets/scripts/videoPlayer.js") 
+  script(src="/assets/scripts/commentSection.js") 

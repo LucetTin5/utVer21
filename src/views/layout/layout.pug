@@ -1,3 +1,5 @@
+include ../mixins/message
+
 doctype html
 html(lang='en')
   head
@@ -7,7 +9,11 @@ html(lang='en')
     link(rel='shortcut icon', href='#')
     link(rel='stylesheet', href='/assets/css/styles.css')
     title #{ pageTitle } | #{ siteName }
-  body 
+  body
+    if messages.error
+      +message('error', messages.error)
+    if messages.info
+      +message('info', messages.info)
     include ../partials/header
     main 
       block content

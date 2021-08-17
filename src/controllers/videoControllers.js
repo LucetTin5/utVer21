@@ -10,7 +10,8 @@ export const home = async (req, res) => {
     return res.render('./videos/home', { pageTitle: 'Home', videos });
   } catch (err) {
     console.log(err);
-    return res.send(`<h1>Server-error</h1><br><p>${err}</p>`);
+    req.flash('error', 'Server Error');
+    return res.status(404).render('404', { pageTitle: '404' });
   }
 };
 // search에는 다양한 mongodb의 옵션을 사용하여 세부 내용을 지정할 수 있음.
@@ -59,13 +60,14 @@ export const postUpload = async (req, res) => {
     session: {
       user: { _id },
     },
-    file: { path: fileUrl },
+    files: { video, thumb },
     body: { title, description, tags },
   } = req;
   try {
     const newVideo = await Video.create({
       title,
-      fileUrl,
+      fileUrl: video[0].path,
+      thumbUrl: thumb[0].path,
       description,
       tags: Video.formatTags(tags),
       owner: _id,
@@ -127,6 +129,7 @@ export const postEdit = async (req, res) => {
       description,
       tags: Video.formatTags(tags),
     });
+    req.flash('info', 'Video Edited.');
     return res.redirect('/');
   } catch (err) {
     console.log(err);
@@ -163,7 +166,7 @@ export const registerView = async (req, res) => {
   const { id } = req.params;
   try {
     const video = await Video.findById(id);
-    video.meta.views++;
+    video.meta.views += 1;
     video.save();
     // status Code를 보내고 종료하려면 sendStatus를 설정
     // status code를 포함시킨 res를 전달하려면 .status().-- 를 사용

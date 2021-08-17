@@ -15,7 +15,8 @@ form {
   }
 }
 
-input:not([type='range']) {
+input:not([type='range']),
+input[type='submit'] {
   all: unset;
   padding: 10px 20px;
   border-radius: 5px;
@@ -32,9 +33,16 @@ input[type='submit'],
   padding: 13px 20px;
   font-weight: 600;
   font-size: 1.2em;
-  background-color: white;
-  color: rgba($color: $bg, $alpha: 1);
-  text-align: center;
+  background-color: #fff !important;
+  color: rgba($color: $bg, $alpha: 1) !important;
+  text-align: center !important;
   cursor: pointer;
   display: block;
+  &:focus {
+    outline: none;
+  }
+  &:disabled {
+    opacity: 0.5;
+    pointer-events: none;
+  }
 }

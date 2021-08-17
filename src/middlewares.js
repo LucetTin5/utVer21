@@ -12,6 +12,7 @@ export const protectorMiddleware = (req, res, next) => {
   if (req.session.loggedIn) {
     return next();
   } else {
+    req.flash('error', 'Unauthorized access');
     return res.redirect('/');
   }
 };
@@ -21,6 +22,7 @@ export const unknonwOnlyMiddleware = (req, res, next) => {
   if (!req.session.loggedIn) {
     return next();
   } else {
+    req.flash('error', 'Unauthorized access');
     return res.redirect('/');
   }
 };

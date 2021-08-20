@@ -6,8 +6,12 @@
   "author": "LucetTin5 <lucettin5@gmail.com>",
   "license": "MIT",
   "scripts": {
-    "sv": "nodemon",
-    "assets": "webpack"
+    "start": "build/init.js",
+    "build": "yarn build:server && yarn build:assets",
+    "build:server": "babel src -d build",
+    "build:assets": "webpack --mode=production",
+    "dev:server": "nodemon",
+    "dev:assets": "webpack --mode=development -w"
   },
   "dependencies": {
     "@ffmpeg/core": "^0.10.0",
@@ -25,6 +29,7 @@
     "regenerator-runtime": "^0.13.9"
   },
   "devDependencies": {
+    "@babel/cli": "^7.14.8",
     "@babel/core": "^7.13.14",
     "@babel/node": "^7.14.2",
     "@babel/preset-env": "^7.13.12",

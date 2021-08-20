@@ -1,5 +1,5 @@
 mixin comment(comment)
-  .comment
+  .comment(data-id=comment._id)
     .comment__writer(id=comment.owner._id)
       a(href='/user/'+comment.owner._id)
         img(src=`${comment.owner.avatarUrl.startsWith('https://')
@@ -11,7 +11,6 @@ mixin comment(comment)
       button.comment__buttons__likeBtn
         span=comment.meta.like
         i.far.fa-thumbs-up
-      button.comment__buttons__dislikeBtn
-        span=comment.meta.dislike
-        i.far.fa-thumbs-down
-  
+      if String(comment.owner._id) === String(loggedInUser._id)
+        button.comment__buttons__remove
+          i.fas.fa-times

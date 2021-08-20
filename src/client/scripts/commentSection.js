@@ -3,10 +3,40 @@ import fetch from 'node-fetch';
 const videoContainer = document.getElementById('videoContainer');
 const form = document.getElementById('commentForm');
 
-const commentTemplate = async (text) => {
-  const userData = await (await fetch('/api/user/current')).json();
-  const loggedInUser = JSON.parse(userData);
-  console.log(loggedInUser);
+const deleteComment = async (event) => {
+  const videoId = videoContainer.dataset.id;
+  const { target } = event;
+  const comment = ((node) => {
+    while (node.className !== 'comment') {
+      if (node.className === 'comment__writer') {
+        ownerId = node.id;
+      }
+      node = node.parentNode;
+    }
+    return node;
+  })(target);
+  const commentId = comment.dataset.id;
+  const ownerId = comment.querySelector('.comment__writer').id;
+  try {
+    const { status } = await fetch(`/api/videos/${videoId}/delete-comment`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        commentId,
+      }),
+    });
+    if (status === 204) {
+      comment.remove();
+    }
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+const commentTemplate = (text, user) => {
+  const loggedInUser = user;
   return `
     <div class='comment__writer' id=${loggedInUser}>
       <a href=${'/user/' + loggedInUser._id}>
@@ -25,20 +55,22 @@ const commentTemplate = async (text) => {
         <span>0</span>
         <i class="far fa-thumbs-up"></i>
       </button>
-      <button class='comment__buttons__dislikeBtn'>
-        <span>0</span>
-        <i class="far fa-thumbs-down"></i>
+      <button class='comment__buttons__remove'>
+        <i class="fas fa-times"></i>
       </button>
     </div>
   `;
 };
 
-const fakeComment = async (text) => {
+const fakeComment = (text) => {
   const commentContainer = document.querySelector('.comment__container');
+  const user = JSON.parse(commentContainer.dataset.current);
   const comment = document.createElement('div');
   comment.className = 'comment';
-  comment.innerHTML = await commentTemplate(text);
+  comment.innerHTML = commentTemplate(text, user);
   commentContainer.appendChild(comment);
+  const removeBtn = comment.querySelector('.comment__buttons__remove');
+  removeBtn.addEventListener('click', deleteComment);
 };
 
 const newComment = async (event) => {
@@ -71,3 +103,15 @@ const sendComment = (comment, videoId) => {
 if (form) {
   form.addEventListener('submit', newComment);
 }
+
+(() => {
+  const comments = document.querySelectorAll('.comment');
+  comments.forEach((comment) => {
+    const removeBtn = comment.querySelector('.comment__buttons__remove');
+    if (!removeBtn) {
+      return;
+    } else {
+      removeBtn.addEventListener('click', deleteComment);
+    }
+  });
+})();

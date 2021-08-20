@@ -30,10 +30,11 @@ block content
         textarea(cols="50", rows="4", placeholder="Write new Comment...")
         button
           i.fas.fa-paper-plane
-    .comment__container
-      if video.comments
-        each comment in video.comments.reverse()
-          +comment(comment)
+  .comment__container(data-current=loggedInUser)
+    if video.comments
+      each comment in video.comments.reverse()
+        +comment(comment)
+
 block scripts
   script(src="/assets/scripts/videoPlayer.js")
   if loggedIn 

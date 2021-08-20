@@ -1,3 +1,6 @@
+.video__comments {
+  margin-top: 50px;
+}
 #commentForm {
   max-width: 600px;
   padding: 20px 25px;
@@ -54,8 +57,12 @@
         background: $bg-dark;
         margin-right: 10px;
       }
-      .comment__buttons__dislikeBtn {
-        background: $btn-dark;
+      .comment__buttons__remove {
+        background: #ddd;
+        color: $bg-dark;
+        display: flex;
+        justify-content: center;
+        font-size: 1.3em;
       }
     }
   }

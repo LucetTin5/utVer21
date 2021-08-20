@@ -214,5 +214,29 @@ export const newComment = async (req, res) => {
     return res.sendStatus(404);
   }
 };
+
+export const deleteComment = async (req, res) => {
+  const {
+    params: { id },
+    body: { commentId },
+    session: {
+      user: { _id },
+    },
+  } = req;
+  try {
+    await Comment.findByIdAndDelete(commentId);
+    const video = await Video.findById(id);
+    const user = await User.findById(_id);
+    video.comments = video.comments.filter((comment) => comment !== commentId);
+    user.comments = user.comments.filter((comment) => comment !== commentId);
+    video.save();
+    user.save();
+    req.flash('info', 'Comment is deleted');
+    return res.sendStatus(204);
+  } catch (err) {
+    return res.sendStatus(404);
+  }
+};
+
 export const comments = (req, res) => res.send('Comments');
 export const editComment = (req, res) => res.send('Edut Comment');

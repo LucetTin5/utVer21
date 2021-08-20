@@ -1,6 +1,4 @@
 //env  // ==> require('dotenv').config(); === import dotenv from 'dotenv'; dotenv.config();
-import 'dotenv/config';
-
 import 'regenerator-runtime/runtime';
 // database
 import './db';

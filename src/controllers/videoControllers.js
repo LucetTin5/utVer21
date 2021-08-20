@@ -43,7 +43,12 @@ export const search = async (req, res) => {
 export const watch = async (req, res) => {
   const { id } = req.params;
   try {
-    const video = await Video.findById(id).populate(['owner', 'comments']);
+    const video = await Video.findById(id)
+      .sort({ createdAt: 'desc' })
+      .populate([
+        'owner',
+        { path: 'comments', populate: { path: 'owner', model: 'User' } },
+      ]);
     if (!video) {
       throw new Error('Video not found');
     }
@@ -194,11 +199,16 @@ export const newComment = async (req, res) => {
     });
     const video = await Video.findById(id);
     const user = await User.findById(_id);
+    if (!video || !user) {
+      req.flash('error', 'Video/User not found');
+      throw Error;
+    }
     video.comments.push(newComment._id);
     user.comments.push(newComment._id);
     video.save();
     user.save();
-    return res.sendStatus(200);
+    // 201: Created Status code
+    return res.sendStatus(201);
   } catch (err) {
     console.log(err);
     return res.sendStatus(404);

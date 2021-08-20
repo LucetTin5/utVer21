@@ -288,6 +288,14 @@ export const profile = async (req, res) => {
     return res.status(400).redirect('/');
   }
 };
+// api
+export const currentUser = (req, res) => {
+  const {
+    session: { user },
+  } = req;
+  const datum = JSON.stringify(user);
+  return res.status(200).json(datum);
+};
 // UserRouter
 export const edit = (req, res) => res.send('Edit Profile');
 export const remove = (req, res) => res.send('Remove Profile');

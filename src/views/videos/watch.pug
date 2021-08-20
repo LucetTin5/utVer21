@@ -23,11 +23,16 @@ block content
   if loggedIn
     .video__comments
       form.video__comments-form#commentForm
-        textarea(cols="30", rows="4", placeholder="Write new Comment...")
-        button Add new comment 
-    if video.comments
-      .comment__container
-        each comment in video.comments
+        if loggedInUser.avatarUrl.startsWith('https://')
+          img.avatar.avatar-small(src=loggedInUser.avatarUrl alt=loggedInUser.name)
+        else 
+          img.avatar.avatar-small(src='/' + loggedInUser.avatarUrl alt=loggedInUser.name)
+        textarea(cols="50", rows="4", placeholder="Write new Comment...")
+        button
+          i.fas.fa-paper-plane
+    .comment__container
+      if video.comments
+        each comment in video.comments.reverse()
           +comment(comment)
 block scripts
   script(src="/assets/scripts/videoPlayer.js")

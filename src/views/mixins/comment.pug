@@ -1,13 +1,17 @@
 mixin comment(comment)
   .comment
-    div(id=comment.owner)
+    .comment__writer(id=comment.owner._id)
+      a(href='/user/'+comment.owner._id)
+        img(src=`${comment.owner.avatarUrl.startsWith('https://')
+            ? comment.owner.avatarUrl
+            : '/' + comment.owner.avatarUrl}`, alt=`${comment.owner.name}'s Avatar`).avatar.avatar-small
     .comment__comment
       span=comment.comment
     .comment__buttons
-      span=comment.meta.like
-      button.comment__buttons__likeBtn#likeBtn
-        i.far.fa-thumbs-up#likeIcon
-      span=comment.meta.dislike
-      button.comment__buttons__dislieBtn#dislikeBtn
-        i.far.fa-thumbs-down#dislikeIcon
+      button.comment__buttons__likeBtn
+        span=comment.meta.like
+        i.far.fa-thumbs-up
+      button.comment__buttons__dislikeBtn
+        span=comment.meta.dislike
+        i.far.fa-thumbs-down
   

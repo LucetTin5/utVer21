@@ -10,7 +10,7 @@
     "yarn": "1.x"
   },
   "scripts": {
-    "start": "build/init.js",
+    "start": "node build/init.js",
     "build": "yarn build:server && yarn build:assets",
     "build:server": "babel src -d build",
     "build:assets": "webpack --mode=production",

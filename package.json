@@ -5,6 +5,10 @@
   "repository": "https://github.com/LucetTin5/utVer21.git",
   "author": "LucetTin5 <lucettin5@gmail.com>",
   "license": "MIT",
+  "engines": {
+    "node": "14.x",
+    "yarn": "1.x"
+  },
   "scripts": {
     "start": "build/init.js",
     "build": "yarn build:server && yarn build:assets",

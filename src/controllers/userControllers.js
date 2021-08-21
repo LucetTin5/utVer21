@@ -77,6 +77,7 @@ export const startGitHubLogin = (req, res) => {
 
 export const finishGitHubLogin = async (req, res) => {
   // auth 진행 -> code를 받아옴, code를 기반으로 access token을 요청함
+  console.log(req.query.code);
   const baseUrl = 'https://github.com/login/oauth/access_token';
   const config = {
     client_id: process.env.GH_CLIENT,
@@ -120,6 +121,7 @@ export const finishGitHubLogin = async (req, res) => {
       );
       if (!emailObj) {
         // 이메일이 존재하지 않는 경우 오류메시지 알림을 주게 될 것
+        req.flash('error', 'No Email');
         return res.status(400).redirect('/login');
       }
       // 이메일이 존재한다. 로그인을 시켜주자

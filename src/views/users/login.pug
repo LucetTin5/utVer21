@@ -2,7 +2,7 @@ extends ../layout/layout
 
 
 block content
-  if errMsg
+  if !isHeroku && errMsg
     span=errMsg
   form(method='POST')
     label(for='email') E-mail

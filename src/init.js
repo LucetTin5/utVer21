@@ -1,4 +1,6 @@
 //env  // ==> require('dotenv').config(); === import dotenv from 'dotenv'; dotenv.config();
+// import 'dotenv/config';
+
 import 'regenerator-runtime/runtime';
 // database
 import './db';
@@ -14,3 +16,5 @@ const PORT = process.env.PORT || 8187;
 app.listen(PORT, () =>
   console.log(`✅ Server listening on port https://localhost:${PORT}`)
 );
+
+export const isHeroku = process.env.NODE_ENV === 'production';

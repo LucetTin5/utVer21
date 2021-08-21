@@ -1,6 +1,7 @@
 import User from '../models/User';
 import bcrypt from 'bcrypt';
 import fetch from 'node-fetch';
+import { isHeroku } from '../middlewares';
 // RootRouter
 export const getJoin = (req, res) =>
   res.render('./users/join', { pageTitle: 'Join' });
@@ -196,7 +197,7 @@ export const postEdit = async (req, res) => {
     const updatedUser = await User.findByIdAndUpdate(
       _id,
       {
-        avatarUrl: file ? file.path : avatarUrl,
+        avatarUrl: file ? (isHeroku ? file.location : file.path) : avatarUrl,
         email,
         username,
         name,
@@ -288,7 +289,3 @@ export const profile = async (req, res) => {
     return res.status(400).redirect('/');
   }
 };
-
-// UserRouter
-export const edit = (req, res) => res.send('Edit Profile');
-export const remove = (req, res) => res.send('Remove Profile');

@@ -1,14 +1,10 @@
 extends ../layout/layout
-
+include ../mixins/message
 block content
-  if errMsg
+  if !isHeroku && errMsg
     span=errMsg
   label(for='user-profile').edit-profile__form
   form(method='post', name='user-profile', enctype='multipart/form-data')
-    //-  if loggedInUser.avatarUrl.startsWith('https://')
-        img(src=`${loggedInUser.avatarUrl}`, alt=loggedInUser.username).avatar
-      else  
-        img(src=`/${loggedInUser.avatarUrl}`, alt=loggedInUser.username).avatar
     label(for='avatar') Avatar
       input(type="file", name="avatar", id='avatar', accept='image/*') 
     label(for='email') Email

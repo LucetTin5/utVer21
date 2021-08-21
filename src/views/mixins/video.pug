@@ -1,6 +1,6 @@
 mixin video(video)
   a(href=`/videos/${video.id}`).video-mixin
-    img.video-mixin__thumb(src='/'+video.thumbUrl, alt=video.title)
+    img.video-mixin__thumb(src=video.thumbUrl.startsWith('http') ? video.thumbUrl : '/' + video.thumbUrl, alt=video.title)
     .video-mixin__data
       span.video-mixin__title #{ video.title.charAt(0).toUpperCase() + video.title.slice(1) }
       .video-mixin__meta

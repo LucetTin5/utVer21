@@ -18,7 +18,7 @@ header
           a(href='/user/edit').header__btn Edit Profile
         li
           a(href=`/user/${loggedInUser._id}`)
-            if loggedInUser.avatarUrl === ""
+            if !loggedInUser.avatarUrl
               span 😎
             else
               if loggedInUser.avatarUrl.startsWith('https://')

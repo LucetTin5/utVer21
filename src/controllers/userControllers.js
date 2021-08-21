@@ -77,7 +77,7 @@ export const startGitHubLogin = (req, res) => {
 
 export const finishGitHubLogin = async (req, res) => {
   // auth 진행 -> code를 받아옴, code를 기반으로 access token을 요청함
-  console.log(req.query.code);
+  console.log(req.query.code, '\n');
   const baseUrl = 'https://github.com/login/oauth/access_token';
   const config = {
     client_id: process.env.GH_CLIENT,
@@ -86,6 +86,7 @@ export const finishGitHubLogin = async (req, res) => {
   };
   const params = new URLSearchParams(config).toString();
   const finalUrl = `${baseUrl}?${params}`;
+  console.log('finalUrl: ', finalUrl);
   try {
     const fetchRequest = await (
       await fetch(finalUrl, {
@@ -95,6 +96,7 @@ export const finishGitHubLogin = async (req, res) => {
         },
       })
     ).json();
+    console.log(fetchRequest, '\n', fetchRequest.access_token);
     // 받아온 access_token을 이용, GH api에 post 요청을 보내 허용된 정보를 받아옴
     // API가 ~user이기 때문에 read:user에 해당하는 정보만 받아오게 되어, email 정보는 새로운 fetch를 실행해야 함
     if ('access_token' in fetchRequest) {

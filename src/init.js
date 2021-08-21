@@ -17,4 +17,4 @@ app.listen(PORT, () =>
   console.log(`✅ Server listening on port https://localhost:${PORT}`)
 );
 
-export const isHeroku = process.env.NODE_ENV === 'production';
+export const isHeroku = process.env.NODE_ENV === 'production' ? true : false;

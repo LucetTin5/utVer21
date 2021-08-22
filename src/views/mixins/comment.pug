@@ -1,6 +1,6 @@
 mixin comment(comment)
   .comment(data-id=comment._id)
-    .comment__writer(id=comment.owner._id)
+    .comment__writer
       a(href='/user/'+comment.owner._id)
         img(src=`${comment.owner.avatarUrl.startsWith('http')
             ? comment.owner.avatarUrl

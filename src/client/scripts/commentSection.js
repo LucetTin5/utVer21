@@ -8,15 +8,11 @@ const deleteComment = async (event) => {
   const { target } = event;
   const comment = ((node) => {
     while (node.className !== 'comment') {
-      if (node.className === 'comment__writer') {
-        ownerId = node.id;
-      }
       node = node.parentNode;
     }
     return node;
   })(target);
   const commentId = comment.dataset.id;
-  const ownerId = comment.querySelector('.comment__writer').id;
   try {
     const { status } = await fetch(`/api/videos/${videoId}/delete-comment`, {
       method: 'POST',
@@ -38,7 +34,7 @@ const deleteComment = async (event) => {
 const commentTemplate = (text, user) => {
   const loggedInUser = user;
   return `
-    <div class='comment__writer' id=${loggedInUser}>
+    <div class='comment__writer'>
       <a href=${'/user/' + loggedInUser._id}>
         <img src=${
           loggedInUser.avatarUrl.startsWith('https://')
@@ -62,12 +58,13 @@ const commentTemplate = (text, user) => {
   `;
 };
 
-const fakeComment = (text) => {
+const fakeComment = (text, commentId) => {
   const commentContainer = document.querySelector('.comment__container');
   const user = JSON.parse(commentContainer.dataset.current);
   const comment = document.createElement('div');
   comment.className = 'comment';
   comment.innerHTML = commentTemplate(text, user);
+  comment.dataset.id = commentId;
   commentContainer.appendChild(comment);
   const removeBtn = comment.querySelector('.comment__buttons__remove');
   removeBtn.addEventListener('click', deleteComment);
@@ -83,7 +80,8 @@ const newComment = async (event) => {
   } else {
     const res = await sendComment(text, videoId);
     if (res.status === 201) {
-      fakeComment(text);
+      const { newCommentId } = await res.json();
+      fakeComment(text, newCommentId);
     }
     textarea.value = '';
   }

@@ -208,7 +208,7 @@ export const newComment = async (req, res) => {
     video.save();
     user.save();
     // 201: Created Status code
-    return res.sendStatus(201);
+    return res.send(201).json({ newCommentId: newComment._id });
   } catch (err) {
     console.log(err);
     return res.sendStatus(404);

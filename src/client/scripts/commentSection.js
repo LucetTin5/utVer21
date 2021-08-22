@@ -107,7 +107,7 @@ const deleteComment = async (event) => {
 const commentTemplate = (text, user) => {
   const loggedInUser = user;
   return `
-    <div class='comment__writer'>
+    <div class='comment__writer' data-id: ${loggedInUser._id}>
       <a href=${'/user/' + loggedInUser._id}>
         <img src=${
           loggedInUser.avatarUrl.startsWith('http')

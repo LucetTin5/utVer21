@@ -7,9 +7,9 @@ mixin comment(comment)
             : '/' + comment.owner.avatarUrl}`, alt=`${comment.owner.name}'s Avatar`).avatar.avatar-small
     .comment__comment(data-value=comment.comment)
       span=comment.comment
-  if String(comment.owner._id) === String(loggedInUser._id)
-    .comment__buttons
-      button.comment__buttons__modify
-        i.far.fa-edit
-      button.comment__buttons__remove
-        i.fas.fa-times
+    if String(comment.owner._id) === String(loggedInUser._id)
+      .comment__buttons
+        button.comment__buttons__modify
+          i.far.fa-edit
+        button.comment__buttons__remove
+          i.fas.fa-times

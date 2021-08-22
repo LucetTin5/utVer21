@@ -241,3 +241,19 @@ export const deleteComment = async (req, res) => {
     return res.sendStatus(404);
   }
 };
+export const modifyComment = async (req, res) => {
+  const {
+    body: { ownerId, commentId, comment },
+    session: {
+      user: { _id },
+    },
+  } = req;
+  if (String(_id) !== String(ownerId)) return res.sendStatus(401);
+  try {
+    await Comment.findByIdAndUpdate(commentId, { comment });
+    return res.sendStatus(201);
+  } catch (err) {
+    console.log(err);
+    return res.sendStatus(404);
+  }
+};

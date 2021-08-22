@@ -1,6 +1,8 @@
 //env  // ==> require('dotenv').config(); === import dotenv from 'dotenv'; dotenv.config();
+// only for dev local
 // import 'dotenv/config';
 
+// async
 import 'regenerator-runtime/runtime';
 // database
 import './db';

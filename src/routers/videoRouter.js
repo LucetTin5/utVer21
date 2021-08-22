@@ -7,8 +7,6 @@ import {
   getEdit,
   postEdit,
   remove,
-  comments,
-  editComment,
   getUpload,
   postUpload,
 } from '../controllers/videoControllers';
@@ -16,6 +14,7 @@ import {
   protectorMiddleware,
   uploadVideo,
   setCrossOrigin,
+  deleteVideo,
 } from '../middlewares';
 
 const videoRouter = express.Router();
@@ -39,8 +38,11 @@ videoRouter
   .all(protectorMiddleware)
   .get(getEdit)
   .post(postEdit);
-videoRouter.get('/:id([0-9a-f]{24})/delete', protectorMiddleware, remove);
-// videoRouter.get('/:id([0-9a-f]{24})/comments', comments);
-// videoRouter.get('/:id([0-9a-f]{24})/comments/:id/edit', editComment);
+videoRouter.get(
+  '/:id([0-9a-f]{24})/delete',
+  protectorMiddleware,
+  deleteVideo,
+  remove
+);
 
 export default videoRouter;

@@ -5,13 +5,13 @@ import {
   protectorMiddleware,
   unknonwOnlyMiddleware,
   uploadAvatar,
+  deleteAvatar,
 } from '../middlewares';
 import {
   getEdit,
   postEdit,
   logout,
   profile,
-  remove,
   startGitHubLogin,
   finishGitHubLogin,
   getChangePassword,
@@ -24,7 +24,7 @@ userRouter
   .route('/edit')
   .all(protectorMiddleware)
   .get(getEdit)
-  .post(uploadAvatar.single('avatar'), postEdit);
+  .post(deleteAvatar, uploadAvatar.single('avatar'), postEdit);
 userRouter
   .route('/change-password')
   .all(protectorMiddleware)

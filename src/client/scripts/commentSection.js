@@ -3,15 +3,88 @@ import fetch from 'node-fetch';
 const videoContainer = document.getElementById('videoContainer');
 const form = document.getElementById('commentForm');
 
+const targetComment = (node) => {
+  while (node.className !== 'comment') {
+    node = node.parentNode;
+  }
+  return node;
+};
+const modifyCommentFinish = async (event) => {
+  event.preventDefault();
+  const { target } = event;
+  const comment = targetComment(target);
+  const modifyBtn = comment.querySelector('.comment__buttons__modify');
+  modifyBtn.removeEventListener('click', modifyComment);
+  modifyBtn.disabled = true;
+  const commentArea = comment.querySelector('.comment__comment');
+  const commentSpan = commentArea.querySelector('span');
+  const currentValue = commentSpan.innerText;
+  const textarea = comment.querySelector('textarea');
+  const text = textarea.value;
+  commentSpan.innerText = text;
+  commentSpan.setAttribute('style', 'display: inline');
+  textarea.remove();
+
+  const videoId = videoContainer.dataset.id;
+  const commentId = comment.dataset.id;
+  const ownerId = comment.querySelector('.comment__writer').dataset.id;
+  if (text === currentValue) {
+    // 변화없음
+    return;
+  } else {
+    // front의 값은 위에서 이미 변경함 백에서 응답을 기다릴 필요가 없음.
+    try {
+      const { status } = await fetch(`/api/videos/${videoId}/modify-comment`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          ownerId,
+          commentId,
+          comment: text,
+        }),
+      });
+      if (status !== 201) {
+        commentSpan.innerText = currentValue;
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  }
+  const removeBtn = comment.querySelector('.comment__buttons__remove');
+  removeBtn.disabled = false;
+  modifyBtn.querySelector('i').className = 'far fa-edit';
+  modifyBtn.removeEventListener('click', modifyCommentFinish);
+  modifyBtn.addEventListener('click', modifyComment);
+  modifyBtn.disabled = false;
+};
+const modifyComment = (event) => {
+  event.preventDefault();
+  const { target } = event;
+  const comment = targetComment(target);
+  const removeBtn = comment.querySelector('.comment__buttons__remove');
+  removeBtn.disabled = true;
+  const modifyBtn = comment.querySelector('.comment__buttons__modify');
+  modifyBtn.querySelector('i').className = 'far fa-check-square';
+  modifyBtn.removeEventListener('click', modifyComment);
+
+  const commentArea = comment.querySelector('.comment__comment');
+  const commentSpan = commentArea.querySelector('span');
+  const currentValue = commentSpan.innerText;
+  const textarea = document.createElement('textarea');
+  textarea.cols = 40;
+  textarea.rows = 3;
+  textarea.value = currentValue;
+  commentSpan.setAttribute('style', 'display:none');
+  commentArea.appendChild(textarea);
+  modifyBtn.addEventListener('click', modifyCommentFinish);
+};
+
 const deleteComment = async (event) => {
   const videoId = videoContainer.dataset.id;
   const { target } = event;
-  const comment = ((node) => {
-    while (node.className !== 'comment') {
-      node = node.parentNode;
-    }
-    return node;
-  })(target);
+  const comment = targetComment(target);
   const commentId = comment.dataset.id;
   try {
     const { status } = await fetch(`/api/videos/${videoId}/delete-comment`, {
@@ -37,7 +110,7 @@ const commentTemplate = (text, user) => {
     <div class='comment__writer'>
       <a href=${'/user/' + loggedInUser._id}>
         <img src=${
-          loggedInUser.avatarUrl.startsWith('https://')
+          loggedInUser.avatarUrl.startsWith('http')
             ? loggedInUser.avatarUrl
             : '/' + loggedInUser.avatarUrl
         } alt=${loggedInUser.name} class="avatar avatar-small"/>
@@ -47,9 +120,8 @@ const commentTemplate = (text, user) => {
       <span>${text}</span>
     </div>
     <div class='comment__buttons'>
-      <button class='comment__buttons__likeBtn'>
-        <span>0</span>
-        <i class="far fa-thumbs-up"></i>
+      <button class='comment__buttons__modify'>
+        <i class="far fa-edit"></i>
       </button>
       <button class='comment__buttons__remove'>
         <i class="fas fa-times"></i>
@@ -66,6 +138,8 @@ const fakeComment = (text, commentId) => {
   comment.innerHTML = commentTemplate(text, user);
   comment.dataset.id = commentId;
   commentContainer.appendChild(comment);
+  const modifyBtn = comment.querySelector('.comment__buttons__modify');
+  modifyBtn.addEventListener('click', modifyComment);
   const removeBtn = comment.querySelector('.comment__buttons__remove');
   removeBtn.addEventListener('click', deleteComment);
 };
@@ -105,10 +179,13 @@ if (form) {
 (() => {
   const comments = document.querySelectorAll('.comment');
   comments.forEach((comment) => {
-    const removeBtn = comment.querySelector('.comment__buttons__remove');
-    if (!removeBtn) {
+    const buttonsContainer = comment.querySelector('.comment__buttons');
+    if (!buttonsContainer) {
       return;
     } else {
+      const modifyBtn = comment.querySelector('.comment__buttons__modify');
+      const removeBtn = comment.querySelector('.comment__buttons__remove');
+      modifyBtn.addEventListener('click', modifyComment);
       removeBtn.addEventListener('click', deleteComment);
     }
   });

@@ -37,14 +37,24 @@
       display: flex;
       align-items: center;
     }
+    textarea {
+      background: transparent;
+      border: none;
+      padding: 10px 5px;
+      font-size: 1.2em;
+      outline: none;
+    }
     .comment__buttons {
       button {
         display: flex;
         align-items: center;
         border: none;
-        color: #fff;
+        background: #ddd;
+        color: $bg-dark;
+        display: flex;
+        justify-content: center;
+        font-size: 1.3em;
         font-weight: 600;
-        font-size: 1.1em;
         width: 40px;
         height: 30px;
         border-radius: 5px;
@@ -53,16 +63,8 @@
           margin-right: 3px;
         }
       }
-      .comment__buttons__likeBtn {
-        background: $bg-dark;
+      .comment__buttons__modify {
         margin-right: 10px;
-      }
-      .comment__buttons__remove {
-        background: #ddd;
-        color: $bg-dark;
-        display: flex;
-        justify-content: center;
-        font-size: 1.3em;
       }
     }
   }

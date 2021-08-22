@@ -1,6 +1,7 @@
 import aws from 'aws-sdk';
 import multer from 'multer';
 import multerS3 from 'multer-s3';
+import fs from 'fs';
 
 const s3 = new aws.S3({
   credentials: {
@@ -36,6 +37,80 @@ export const unknonwOnlyMiddleware = (req, res, next) => {
     req.flash('error', 'Unauthorized access');
     return res.redirect('/');
   }
+};
+const deleteTarget = () => {
+  if (!req.file) {
+    // delete video
+    return `/uploads/videos/${req.params.id}`;
+  } else {
+    // delete last avatar
+    return req.session.loggedInUser.avatarUrl;
+  }
+};
+export const deleteAvatar = (req, res, next) => {
+  return isHeroku()
+    ? deleteS3Avatar(req, res, next)
+    : deleteLocalUpload(req, res, next);
+};
+export const deleteVideo = () => {
+  return isHeroku()
+    ? deleteS3Video(req, res, next)
+    : deleteLocalUpload(req, res, next);
+};
+const deleteLocalUpload = (req, res, next) => {
+  if (isHeroku()) {
+    return next();
+  } else {
+    const target = deleteTarget();
+    fs.unlink(target, (err) => {
+      if (err) throw err;
+      console.log('File Deleted');
+    });
+  }
+  next();
+};
+
+const deleteS3Option = (name) => {
+  return {
+    Bucket: `akitznomae/${name}`,
+    Key: String(req.session.loggedInUser.avatarUrl).match(/[0-9a-z]+$/),
+  };
+};
+const deleteS3Video = (req, res, next) => {
+  if (!isHeroku()) {
+    // production only - aws delete
+    return next();
+  }
+  if (!req.file) {
+    return next();
+  } else {
+    s3.deleteObject(deleteS3Option('video'), (err, data) => {
+      if (err) {
+        console.log('Failed', err);
+        throw err;
+      }
+      console.log('S3 Object deleted', data);
+    });
+  }
+  next();
+};
+const deleteS3Avatar = (req, res, next) => {
+  if (!isHeroku()) {
+    // production only - aws delete
+    return next();
+  }
+  if (!req.file) {
+    return next();
+  } else {
+    s3.deleteObject(deleteS3Option('avatar'), (err, data) => {
+      if (err) {
+        console.log('Failed', err);
+        throw Error(err);
+      }
+      console.log('S3 Object deleted', data);
+    });
+  }
+  next();
 };
 
 const avatarStorage = multerS3({

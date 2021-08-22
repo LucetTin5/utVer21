@@ -1,7 +1,6 @@
 import aws from 'aws-sdk';
 import multer from 'multer';
 import multerS3 from 'multer-s3';
-import { isHeroku } from './init';
 
 const s3 = new aws.S3({
   credentials: {
@@ -9,12 +8,13 @@ const s3 = new aws.S3({
     secretAccessKey: process.env.AWS_SECRET,
   },
 });
+export const isHeroku = () => (process.env.NODE_ENV ? true : false);
 
 export const localsMiddlewares = (req, res, next) => {
   res.locals.siteName = 'Wetube';
   res.locals.loggedIn = Boolean(req.session.loggedIn);
   res.locals.loggedInUser = req.session.user ?? {};
-  res.locals.isHeroku = isHeroku;
+  res.locals.isHeroku = isHeroku();
   next();
 };
 
@@ -48,22 +48,21 @@ const videoStorage = multerS3({
   bucket: 'akitznomad/video',
   acl: 'public-read',
 });
-
 export const uploadAvatar = multer({
   dest: 'uploads/avatar/',
   limits: {
     fileSize: 5 * 1e6,
   },
-  storage: avatarStorage,
-  // storage: Boolean(isHeroku) ? avatarStorage : undefined,
+  // storage: avatarStorage,
+  storage: isHeroku() ? avatarStorage : undefined,
 });
 export const uploadVideo = multer({
   dest: 'uploads/videos/',
   limits: {
     fileSize: 20 * 1e6,
   },
-  storage: videoStorage,
-  // storage: Boolean(isHeroku) ? videoStorage : undefined,
+  // storage: videoStorage,
+  storage: isHeroku() ? videoStorage : undefined,
 });
 export const setCrossOrigin = (_, res, next) => {
   // res.header('Cross-Origin-Opener-Policy', 'same-origin');

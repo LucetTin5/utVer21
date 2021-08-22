@@ -2,7 +2,7 @@
 import Video from '../models/Video';
 import User from '../models/User';
 import Comment from '../models/Comment';
-import { isHeroku } from '../init';
+import { isHeroku } from '../middlewares';
 export const home = async (req, res) => {
   console.log(isHeroku);
   try {
@@ -73,8 +73,8 @@ export const postUpload = async (req, res) => {
   try {
     const newVideo = await Video.create({
       title,
-      fileUrl: isHeroku ? video[0].location : video[0].path,
-      thumbUrl: isHeroku ? thumb[0].location : thumb[0].path,
+      fileUrl: isHeroku() ? video[0].location : video[0].path,
+      thumbUrl: isHeroku() ? thumb[0].location : thumb[0].path,
       description,
       tags: Video.formatTags(tags),
       owner: _id,

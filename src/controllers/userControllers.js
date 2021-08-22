@@ -195,11 +195,11 @@ export const postEdit = async (req, res) => {
         throw new Error('This email/username is already taken.');
       }
     }
-    console.log(`file: ${file}`, `isHeroku: ${isHeroku}`);
+    console.log(`file: ${file}`, `isHeroku: ${isHeroku()}`);
     const updatedUser = await User.findByIdAndUpdate(
       _id,
       {
-        avatarUrl: file ? (isHeroku ? file.location : file.path) : avatarUrl,
+        avatarUrl: file ? (isHeroku() ? file.location : file.path) : avatarUrl,
         email,
         username,
         name,

@@ -195,7 +195,6 @@ export const postEdit = async (req, res) => {
         throw new Error('This email/username is already taken.');
       }
     }
-    console.log(`file: ${file}`, `isHeroku: ${isHeroku()}`);
     const updatedUser = await User.findByIdAndUpdate(
       _id,
       {

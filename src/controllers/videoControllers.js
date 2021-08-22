@@ -4,7 +4,6 @@ import User from '../models/User';
 import Comment from '../models/Comment';
 import { isHeroku } from '../middlewares';
 export const home = async (req, res) => {
-  console.log(isHeroku);
   try {
     const videos = await Video.find({})
       .sort({ createdAt: 'desc' })

@@ -15,7 +15,7 @@ const deleteComment = async (event) => {
   const commentId = comment.dataset.id;
   try {
     const { status } = await fetch(`/api/videos/${videoId}/delete-comment`, {
-      method: 'POST',
+      method: 'DELETE',
       headers: {
         'Content-Type': 'application/json',
       },

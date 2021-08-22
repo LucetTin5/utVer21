@@ -46,6 +46,7 @@ const avatarStorage = multerS3({
 const videoStorage = multerS3({
   s3: s3,
   bucket: 'akitznomad/video',
+  acl: 'public-read',
 });
 
 export const uploadAvatar = multer({
@@ -53,14 +54,14 @@ export const uploadAvatar = multer({
   limits: {
     fileSize: 5 * 1e6,
   },
-  storage: isHeroku ? avatarStorage : undefined,
+  storage: Boolean(isHeroku) ? avatarStorage : undefined,
 });
 export const uploadVideo = multer({
   dest: 'uploads/videos/',
   limits: {
     fileSize: 20 * 1e6,
   },
-  storage: isHeroku ? videoStorage : undefined,
+  storage: Boolean(isHeroku) ? videoStorage : undefined,
 });
 export const setCrossOrigin = (_, res, next) => {
   res.header('Cross-Origin-Opener-Policy', 'same-origin');

@@ -4,7 +4,7 @@ include ../mixins/video
 
 block content
   .profile__data
-    img(src=user.avatarUrl.startsWith('http') ? user.avatarUrl : '/' + user.avatarUrl, alt=`${user.name}'s Avatar`).avatar
+    img(src=user.avatarUrl ? (user.avatarUrl.startsWith('http') ? user.avatarUrl : '/' + user.avatarUrl) : '#', alt=`${user.name}'s Avatar`).avatar
     h3=user.name
   .video-grid
     each video in user.videos

@@ -38,18 +38,7 @@ export const unknonwOnlyMiddleware = (req, res, next) => {
     return res.redirect('/');
   }
 };
-
-export const deleteAvatar = (req, res, next) => {
-  return isHeroku()
-    ? deleteS3Avatar(req, res, next)
-    : deleteLocalUpload(req, res, next);
-};
-export const deleteVideo = () => {
-  return isHeroku()
-    ? deleteS3Video(req, res, next)
-    : deleteLocalUpload(req, res, next);
-};
-const deleteLocalUpload = (req, res, next) => {
+export const deleteLocalUpload = (req, res, next) => {
   if (isHeroku()) {
     return next();
   } else {
@@ -76,7 +65,7 @@ const deleteS3Option = (name) => {
     Key: String(req.session.loggedInUser.avatarUrl).match(/[0-9a-z]+$/),
   };
 };
-const deleteS3Video = (req, res, next) => {
+export const deleteS3Video = (req, res, next) => {
   if (!isHeroku()) {
     // production only - aws delete
     return next();
@@ -94,7 +83,7 @@ const deleteS3Video = (req, res, next) => {
   }
   next();
 };
-const deleteS3Avatar = (req, res, next) => {
+export const deleteS3Avatar = (req, res, next) => {
   if (!isHeroku()) {
     // production only - aws delete
     return next();

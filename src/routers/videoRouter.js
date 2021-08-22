@@ -14,7 +14,8 @@ import {
   protectorMiddleware,
   uploadVideo,
   setCrossOrigin,
-  deleteVideo,
+  deleteS3Video,
+  deleteLocalUpload,
 } from '../middlewares';
 
 const videoRouter = express.Router();
@@ -41,7 +42,8 @@ videoRouter
 videoRouter.get(
   '/:id([0-9a-f]{24})/delete',
   protectorMiddleware,
-  deleteVideo(),
+  deleteLocalUpload,
+  deleteS3Video,
   remove
 );
 

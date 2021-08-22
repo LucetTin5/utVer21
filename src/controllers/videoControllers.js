@@ -248,8 +248,6 @@ export const modifyComment = async (req, res) => {
       user: { _id },
     },
   } = req;
-  console.log('session id: ', _id, '\n');
-  console.log('ownerId: ', ownerId, '\n');
   if (String(_id) !== String(ownerId)) return res.sendStatus(401);
   try {
     await Comment.findByIdAndUpdate(commentId, { comment });

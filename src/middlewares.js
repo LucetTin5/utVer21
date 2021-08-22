@@ -38,13 +38,13 @@ export const unknonwOnlyMiddleware = (req, res, next) => {
     return res.redirect('/');
   }
 };
-const deleteTarget = () => {
+const deleteTarget = (req) => {
   if (!req.file) {
     // delete video
-    return `/uploads/videos/${req.params.id}`;
+    return String(`/uploads/videos/${req.params.id}`);
   } else {
     // delete last avatar
-    return req.session.loggedInUser.avatarUrl;
+    return String(req.session.loggedInUser.avatarUrl);
   }
 };
 export const deleteAvatar = (req, res, next) => {
@@ -61,7 +61,7 @@ const deleteLocalUpload = (req, res, next) => {
   if (isHeroku()) {
     return next();
   } else {
-    const target = deleteTarget();
+    const target = deleteTarget(req);
     fs.unlink(target, (err) => {
       if (err) throw err;
       console.log('File Deleted');

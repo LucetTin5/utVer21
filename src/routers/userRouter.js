@@ -24,7 +24,7 @@ userRouter
   .route('/edit')
   .all(protectorMiddleware)
   .get(getEdit)
-  .post(deleteAvatar, uploadAvatar.single('avatar'), postEdit);
+  .post(deleteAvatar(), uploadAvatar.single('avatar'), postEdit);
 userRouter
   .route('/change-password')
   .all(protectorMiddleware)

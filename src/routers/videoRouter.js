@@ -41,7 +41,7 @@ videoRouter
 videoRouter.get(
   '/:id([0-9a-f]{24})/delete',
   protectorMiddleware,
-  deleteVideo,
+  deleteVideo(),
   remove
 );
 

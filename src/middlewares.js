@@ -54,17 +54,19 @@ export const uploadAvatar = multer({
   limits: {
     fileSize: 5 * 1e6,
   },
-  storage: Boolean(isHeroku) ? avatarStorage : undefined,
+  storage: avatarStorage,
+  // storage: Boolean(isHeroku) ? avatarStorage : undefined,
 });
 export const uploadVideo = multer({
   dest: 'uploads/videos/',
   limits: {
     fileSize: 20 * 1e6,
   },
-  storage: Boolean(isHeroku) ? videoStorage : undefined,
+  storage: videoStorage,
+  // storage: Boolean(isHeroku) ? videoStorage : undefined,
 });
 export const setCrossOrigin = (_, res, next) => {
-  res.header('Cross-Origin-Opener-Policy', 'same-origin');
-  res.header('Cross-Origin-Embedder-Policy', 'require-corp');
+  // res.header('Cross-Origin-Opener-Policy', 'same-origin');
+  // res.header('Cross-Origin-Embedder-Policy', 'require-corp');
   next();
 };

@@ -12,9 +12,8 @@ import './models/Comment';
 import app from './server';
 
 const PORT = process.env.PORT || 8187;
-
-app.listen(PORT, () =>
-  console.log(`✅ Server listening on port https://localhost:${PORT}`)
-);
-
-export const isHeroku = process.env.NODE_ENV === 'production' ? true : false;
+export let isHeroku;
+app.listen(PORT, () => {
+  isHeroku = process.env.NODE_ENV === 'production' ? true : false;
+  console.log(`✅ Server listening on port https://localhost:${PORT}`);
+});

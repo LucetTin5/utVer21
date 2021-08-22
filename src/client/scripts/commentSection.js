@@ -107,7 +107,7 @@ const deleteComment = async (event) => {
 const commentTemplate = (text, user) => {
   const loggedInUser = user;
   return `
-    <div class='comment__writer' data-id:'${loggedInUser._id}'>
+    <div class='comment__writer'>
       <a href=${'/user/' + loggedInUser._id}>
         <img src=${
           loggedInUser.avatarUrl.startsWith('http')
@@ -137,7 +137,8 @@ const fakeComment = (text, commentId) => {
   comment.className = 'comment';
   comment.innerHTML = commentTemplate(text, user);
   comment.dataset.id = commentId;
-  commentContainer.appendChild(comment);
+  comment.querySelector('.comment__writer').dataset.id = user._id;
+  commentContainer.prepend(comment);
   const modifyBtn = comment.querySelector('.comment__buttons__modify');
   modifyBtn.addEventListener('click', modifyComment);
   const removeBtn = comment.querySelector('.comment__buttons__remove');

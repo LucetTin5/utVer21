@@ -227,8 +227,12 @@ export const deleteComment = async (req, res) => {
     await Comment.findByIdAndDelete(commentId);
     const video = await Video.findById(id);
     const user = await User.findById(_id);
+    console.log('video\n', video.comments, '\n');
+    console.log('user\n', user.comments, '\n');
     video.comments = video.comments.filter((comment) => comment !== commentId);
     user.comments = user.comments.filter((comment) => comment !== commentId);
+    console.log('video\n', video.comments, '\n');
+    console.log('user\n', user.comments, '\n');
     video.save();
     user.save();
     req.flash('info', 'Comment is deleted');

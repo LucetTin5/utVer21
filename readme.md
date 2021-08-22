@@ -70,4 +70,12 @@ Schema - Model -> link to server/DB
 
 Tag Video inhereits **[HTMLMediaElement](https://developer.mozilla.org/ko/docs/Web/API/HTMLMediaElement)**
 
-##
+## Deployment
+
+- MongoDB Atlas as DB
+- AWS S3 for files
+- Heroku for deployment - link with GitHub Repo
+
+## Last work
+
+- delete comment at DB video, user
